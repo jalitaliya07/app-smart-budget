@@ -7,6 +7,7 @@ import Chart from 'chart.js/auto';
 import { Subscription } from 'rxjs';
 import { BankService } from '../../../core/services/bank';
 import { ContextService } from '../../../core/services/context';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -21,6 +22,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   budgetService = inject(BudgetService);
   bankService = inject(BankService);
   contextService = inject(ContextService);
+  authService = inject(AuthService);
 
   activeBanks: any[] = [];
   selectedBank = 'All';
@@ -41,11 +43,29 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   recentTransactions: any[] = [];
   chartInstance: any;
 
+  // Premium dashboard properties
+  userName = 'User';
+  greetingMessage = 'Welcome back';
+  currentMonthYearName = '';
+  aiInsightMessage = 'Calculating insights...';
+
   private sub1!: Subscription;
   private sub2!: Subscription;
   private sub3!: Subscription;
 
   ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      this.userName = user?.name || 'User';
+    });
+
+    const hour = new Date().getHours();
+    if (hour < 12) this.greetingMessage = 'Good morning';
+    else if (hour < 17) this.greetingMessage = 'Good afternoon';
+    else this.greetingMessage = 'Good evening';
+
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    this.currentMonthYearName = `${months[new Date().getMonth()]} ${new Date().getFullYear()}`;
+
     this.sub1 = this.expenseService.expenses$.subscribe(expenses => {
       this.calculateMetrics(expenses || [], this.budgetService.getCurrentBudgets() || []);
     });
@@ -163,6 +183,20 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     this.bankBalance = Number((this.bankMonthlyBudget - this.bankMonthlyExpense).toFixed(2));
     this.cashBalance = Number((this.cashMonthlyBudget - this.cashMonthlyExpense).toFixed(2));
 
+    // Dynamic AI insights
+    if (this.monthlyBudget > 0) {
+      const ratio = this.monthlyExpense / this.monthlyBudget;
+      if (ratio > 0.9) {
+        this.aiInsightMessage = 'Spent over 90% of budget. We recommend limiting non-essential category purchases.';
+      } else if (ratio > 0.7) {
+        this.aiInsightMessage = 'Spending is at 70% of budget. Keep an eye on secondary subscriptions.';
+      } else {
+        this.aiInsightMessage = 'Your monthly spending rate is fully on track. Great job!';
+      }
+    } else {
+      this.aiInsightMessage = 'Set category budgets to unlock personalized AI savings suggestions.';
+    }
+
     // 4. Format Recent Transactions for UI
     this.recentTransactions = expenses.slice(0, 5).map((e, idx) => {
       const colors = ['text-emerald-500', 'text-indigo-500', 'text-rose-500', 'text-amber-500', 'text-cyan-500'];
@@ -186,20 +220,38 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initChart() {
-    this.chartInstance = new Chart(this.expenseChart.nativeElement, {
+    const canvas = this.expenseChart.nativeElement;
+    const ctx = canvas.getContext('2d');
+    
+    // Create gradient colors
+    const bankGradient = ctx.createLinearGradient(0, 0, 0, 300);
+    bankGradient.addColorStop(0, 'rgba(99, 102, 241, 0.95)'); // Indigo
+    bankGradient.addColorStop(1, 'rgba(168, 85, 247, 0.4)'); // Purple
+    
+    const cashGradient = ctx.createLinearGradient(0, 0, 0, 300);
+    cashGradient.addColorStop(0, 'rgba(16, 185, 129, 0.95)'); // Emerald
+    cashGradient.addColorStop(1, 'rgba(6, 182, 212, 0.4)');  // Cyan
+
+    this.chartInstance = new Chart(canvas, {
       type: 'bar',
       data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].slice(new Date().getMonth() >= 5 ? new Date().getMonth() - 5 : 0, new Date().getMonth() + 1),
         datasets: [{
           label: 'Bank (₹)',
           data: [0, 0, 0, 0, 0, 0],
-          backgroundColor: '#6366f1',
-          borderRadius: 6
+          backgroundColor: bankGradient,
+          borderColor: '#6366f1',
+          borderWidth: 1.5,
+          borderRadius: 8,
+          hoverBackgroundColor: '#6366f1'
         }, {
           label: 'Cash (₹)',
           data: [0, 0, 0, 0, 0, 0],
-          backgroundColor: '#10b981',
-          borderRadius: 6
+          backgroundColor: cashGradient,
+          borderColor: '#10b981',
+          borderWidth: 1.5,
+          borderRadius: 8,
+          hoverBackgroundColor: '#10b981'
         }]
       },
       options: {
@@ -208,11 +260,23 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
         scales: {
           y: {
             beginAtZero: true,
-            grid: { display: true, color: '#f1f5f9' }
+            grid: { display: true, color: 'rgba(241, 245, 249, 0.4)' },
+            ticks: { color: '#64748b', font: { weight: 'bold' } }
           },
-          x: { grid: { display: false } }
+          x: { 
+            grid: { display: false },
+            ticks: { color: '#64748b', font: { weight: 'bold' } }
+          }
         },
-        plugins: { legend: { position: 'top' } }
+        plugins: { 
+          legend: { 
+            position: 'top',
+            labels: {
+              color: '#334155',
+              font: { weight: 'bold', size: 12 }
+            }
+          } 
+        }
       }
     });
   }

@@ -1,156 +1,253 @@
-<div class="space-y-6">
-  <!-- Top Stats Row -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <!-- Stat Card 1 -->
-    <div routerLink="/budgets" class="cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between group hover:shadow-md transition-shadow">
-      <div>
-        <p class="text-sm font-medium text-slate-500 mb-1">Total Balance</p>
-        <h3 class="text-2xl font-bold text-slate-800">₹{{ totalBalance | number:'1.2-2' }}</h3>
+<div class="space-y-6 max-w-7xl mx-auto px-1">
+  
+  <!-- Modern Greeting Banner Card -->
+  <div class="relative overflow-hidden bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 rounded-3xl p-6 md:p-8 text-white border border-white/5 shadow-xl shadow-indigo-950/20">
+    <!-- Decorative Glowing Blob -->
+    <div class="absolute -right-20 -top-20 w-52 h-52 bg-indigo-500/20 blur-[100px] rounded-full pointer-events-none"></div>
+    <div class="absolute -left-20 -bottom-20 w-52 h-52 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+    
+    <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div class="space-y-2">
+        <span class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-cyan-300 bg-cyan-500/15 border border-cyan-400/20 px-3 py-1 rounded-full">
+          <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span> Live Hub
+        </span>
+        <h2 class="text-3xl md:text-4xl font-black tracking-tight text-white mt-1">
+          {{ greetingMessage }}, <span class="bg-gradient-to-r from-indigo-200 to-cyan-200 bg-clip-text text-transparent">{{ userName }}</span>!
+        </h2>
+        <p class="text-slate-300 text-sm max-w-xl">
+          Here is your financial status overview for the month of <span class="font-bold text-white">{{ currentMonthYearName }}</span>.
+        </p>
       </div>
-      <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <span class="font-bold text-xl">₹</span>
-      </div>
-    </div>
 
-    <!-- Stat Card 2 -->
-    <div routerLink="/expenses" class="cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between group hover:shadow-md transition-shadow">
-      <div>
-        <p class="text-sm font-medium text-slate-500 mb-1">Monthly Expense</p>
-        <h3 class="text-2xl font-bold text-slate-800">₹{{ monthlyExpense | number:'1.2-2' }}</h3>
-      </div>
-      <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <span class="font-bold text-xl">↓</span>
-      </div>
-    </div>
-
-    <!-- Stat Card 3 -->
-    <div routerLink="/budgets" class="cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between group hover:shadow-md transition-shadow">
-      <div>
-        <p class="text-sm font-medium text-slate-500 mb-1">Monthly Budget</p>
-        <h3 class="text-2xl font-bold text-slate-800">₹{{ monthlyBudget | number:'1.2-2' }}</h3>
-      </div>
-      <div class="w-12 h-12 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <span class="font-bold text-xl">B</span>
-      </div>
-    </div>
-
-    <!-- Stat Card 4 -->
-    <div class="bg-gradient-to-br from-indigo-600 to-cyan-500 rounded-2xl p-6 shadow-lg shadow-indigo-500/30 text-white flex items-center justify-between transform hover:-translate-y-1 transition-transform">
-      <div>
-        <p class="text-sm font-medium opacity-80 mb-1">Total Savings</p>
-        <h3 class="text-2xl font-bold">₹{{ savings | number:'1.2-2' }}</h3>
-      </div>
-      <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
-        <span class="font-bold text-xl">↑</span>
+      <!-- Live AI Advice Card -->
+      <div class="flex items-start gap-4 bg-white/5 border border-white/10 rounded-2xl p-4.5 backdrop-blur-md max-w-md lg:w-96">
+        <span class="text-3xl shrink-0">🤖</span>
+        <div class="space-y-1">
+          <p class="text-xs font-extrabold text-indigo-300 uppercase tracking-widest">AI Financial Advisor</p>
+          <p class="text-xs text-slate-300 leading-normal font-medium">{{ aiInsightMessage }}</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Bank & Cash Account Breakdown Row -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Bank Card -->
-    <div routerLink="/banks" class="cursor-pointer bg-gradient-to-br from-indigo-600 to-cyan-600 rounded-3xl p-6 shadow-lg shadow-indigo-500/20 text-white flex flex-col justify-between h-52 relative overflow-hidden group hover:scale-[1.01] transition-all">
-      <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-white/5 group-hover:scale-110 transition-transform"></div>
+  <!-- Premium Metrics Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    
+    <!-- Balance Card -->
+    <div routerLink="/budgets" class="cursor-pointer bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative group overflow-hidden">
+      <div class="absolute top-0 left-0 w-1.5 h-full bg-indigo-500"></div>
       <div class="flex justify-between items-start">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-widest text-indigo-100 block mb-1">Bank Account Overview</span>
-          <h4 class="text-3xl font-extrabold tracking-tight">₹{{ bankBalance | number:'1.2-2' }}</h4>
-          <span class="text-xs text-indigo-200 mt-1 block">Available Bank Balance</span>
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Balance</span>
+        <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center text-sm font-bold group-hover:scale-105 transition-transform">⚖️</span>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-2xl font-black text-slate-800">₹{{ totalBalance | number:'1.2-2' }}</h3>
+        <p class="text-[10px] font-bold text-indigo-500 mt-1 flex items-center gap-1">
+          <span>Available to spend</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Monthly Expense -->
+    <div routerLink="/expenses" class="cursor-pointer bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative group overflow-hidden">
+      <div class="absolute top-0 left-0 w-1.5 h-full bg-rose-500"></div>
+      <div class="flex justify-between items-start">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Monthly Expense</span>
+        <span class="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-sm font-bold group-hover:scale-105 transition-transform">📉</span>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-2xl font-black text-slate-800">₹{{ monthlyExpense | number:'1.2-2' }}</h3>
+        <p class="text-[10px] font-bold text-rose-500 mt-1">Total spent this month</p>
+      </div>
+    </div>
+
+    <!-- Monthly Budget -->
+    <div routerLink="/budgets" class="cursor-pointer bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative group overflow-hidden">
+      <div class="absolute top-0 left-0 w-1.5 h-full bg-cyan-500"></div>
+      <div class="flex justify-between items-start">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Allocated Budget</span>
+        <span class="w-8 h-8 rounded-lg bg-cyan-50 text-cyan-500 flex items-center justify-center text-sm font-bold group-hover:scale-105 transition-transform">🎯</span>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-2xl font-black text-slate-800">₹{{ monthlyBudget | number:'1.2-2' }}</h3>
+        <p class="text-[10px] font-bold text-cyan-500 mt-1">Target monthly limit</p>
+      </div>
+    </div>
+
+    <!-- Monthly Savings -->
+    <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-2xl p-5 shadow-lg shadow-indigo-500/20 flex flex-col justify-between hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group">
+      <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-white/10 rounded-full blur-lg group-hover:scale-110 transition-transform"></div>
+      <div class="flex justify-between items-start">
+        <span class="text-xs font-bold opacity-80 uppercase tracking-wider">Total Savings</span>
+        <span class="w-8 h-8 rounded-lg bg-white/20 text-white flex items-center justify-center text-sm font-bold">💰</span>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-2xl font-black">₹{{ savings | number:'1.2-2' }}</h3>
+        <p class="text-[10px] font-bold text-cyan-200 mt-1">Leftover surplus saved</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Digital Card accounts section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <!-- Bank Card (Virtual Visa Theme) -->
+    <div routerLink="/banks" class="cursor-pointer bg-gradient-to-br from-slate-900 via-indigo-950 to-indigo-900 rounded-3xl p-6 text-white shadow-xl shadow-slate-950/20 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 min-h-60 flex flex-col justify-between border border-white/5">
+      <!-- Glossy accents -->
+      <div class="absolute -right-12 -bottom-12 w-48 h-48 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none"></div>
+      
+      <!-- Top Section -->
+      <div class="flex justify-between items-start relative z-10">
+        <div class="space-y-1">
+          <span class="text-[10px] font-black uppercase tracking-widest text-indigo-300">Digital Banking</span>
+          <h4 class="text-2xl font-black">₹{{ bankBalance | number:'1.2-2' }}</h4>
+          <span class="text-[10px] text-slate-400 font-semibold">Net Available Bank Balance</span>
         </div>
+        
+        <!-- Filter dropdown -->
         <select 
           [value]="selectedBank" 
           (change)="onBankChange(bankSelect.value)" 
           (click)="$event.stopPropagation()"
           #bankSelect
-          class="bg-white/10 text-white rounded-full backdrop-blur-sm text-xs font-bold border border-white/15 px-3 py-1.5 outline-none cursor-pointer hover:bg-white/20 transition-colors relative z-20"
+          class="bg-white/10 text-white rounded-xl backdrop-blur-md text-xs font-bold border border-white/10 px-3.5 py-2 outline-none cursor-pointer hover:bg-white/20 transition-all relative z-20"
         >
-          <option value="All" class="text-slate-800 font-semibold bg-white">All Banks</option>
+          <option value="All" class="text-slate-800 font-bold bg-white">💼 All Bank Accounts</option>
           @for (bank of activeBanks; track bank.id) {
-            <option [value]="bank.name" class="text-slate-800 font-semibold bg-white">{{ bank.name }}</option>
+            <option [value]="bank.name" class="text-slate-800 font-bold bg-white">💳 {{ bank.name }}</option>
           }
         </select>
       </div>
+
+      <!-- Card Graphic Chip -->
+      <div class="my-3 flex items-center justify-between relative z-10">
+        <div class="w-10 h-8 rounded-lg bg-gradient-to-tr from-amber-400 to-amber-200 opacity-80 border border-amber-300/30 flex items-center justify-center shadow-inner">
+          <!-- Mini chip grid lines -->
+          <div class="w-7 h-5 border border-amber-600/30 rounded flex items-center justify-center"></div>
+        </div>
+        <span class="font-mono text-xs text-indigo-200 tracking-widest">•••• •••• •••• 4289</span>
+      </div>
       
-      <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-4">
+      <!-- Bottom breakdown details -->
+      <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-1 relative z-10">
         <div>
-          <p class="text-xs text-indigo-200 mb-0.5">Monthly Bank Budget</p>
-          <p class="font-bold text-lg">₹{{ bankMonthlyBudget | number:'1.2-2' }}</p>
+          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Bank Budget</p>
+          <p class="font-extrabold text-sm text-slate-100">₹{{ bankMonthlyBudget | number:'1.2-2' }}</p>
         </div>
         <div>
-          <p class="text-xs text-indigo-200 mb-0.5">Monthly Bank Expense</p>
-          <p class="font-bold text-lg text-rose-200">₹{{ bankMonthlyExpense | number:'1.2-2' }}</p>
+          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Bank Expense</p>
+          <p class="font-extrabold text-sm text-rose-300">₹{{ bankMonthlyExpense | number:'1.2-2' }}</p>
         </div>
       </div>
     </div>
 
-    <!-- Cash Card -->
-    <div class="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-3xl p-6 shadow-lg shadow-emerald-500/20 text-white flex flex-col justify-between h-52 relative overflow-hidden group hover:scale-[1.01] transition-all">
-      <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-white/5 group-hover:scale-110 transition-transform"></div>
-      <div class="flex justify-between items-start">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-widest text-emerald-100 block mb-1">Cash Account Overview</span>
-          <h4 class="text-3xl font-extrabold tracking-tight">₹{{ cashBalance | number:'1.2-2' }}</h4>
-          <span class="text-xs text-emerald-200 mt-1 block">Available Cash Balance</span>
+    <!-- Cash Wallet Card (Virtual Cash Theme) -->
+    <div class="bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-950 rounded-3xl p-6 text-white shadow-xl shadow-slate-950/20 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 min-h-60 flex flex-col justify-between border border-white/5">
+      <!-- Glossy accents -->
+      <div class="absolute -right-12 -bottom-12 w-48 h-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+      
+      <!-- Top Section -->
+      <div class="flex justify-between items-start relative z-10">
+        <div class="space-y-1">
+          <span class="text-[10px] font-black uppercase tracking-widest text-emerald-300">Cash Wallet</span>
+          <h4 class="text-2xl font-black">₹{{ cashBalance | number:'1.2-2' }}</h4>
+          <span class="text-[10px] text-slate-400 font-semibold">Net Available Cash Balance</span>
         </div>
-        <div class="px-3 py-1 bg-white/10 rounded-full backdrop-blur-sm text-xs font-bold border border-white/15">CASH</div>
+        <span class="px-3.5 py-1.5 bg-emerald-500/10 border border-emerald-400/20 rounded-full text-[10px] font-black uppercase tracking-widest text-emerald-300">
+          💵 Liquid Cash
+        </span>
+      </div>
+
+      <!-- Card Graphic Details -->
+      <div class="my-3 flex items-center justify-between relative z-10">
+        <div class="w-10 h-8 rounded-lg bg-gradient-to-tr from-emerald-400 to-emerald-200 opacity-60 border border-emerald-300/30 flex items-center justify-center shadow-inner">
+          <div class="w-7 h-5 border border-emerald-600/30 rounded flex items-center justify-center"></div>
+        </div>
+        <span class="font-mono text-xs text-emerald-200 tracking-widest">CASH BALANCE ACC</span>
       </div>
       
-      <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-4">
+      <!-- Bottom breakdown details -->
+      <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-1 relative z-10">
         <div>
-          <p class="text-xs text-emerald-200 mb-0.5">Monthly Cash Budget</p>
-          <p class="font-bold text-lg">₹{{ cashMonthlyBudget | number:'1.2-2' }}</p>
+          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Cash Budget</p>
+          <p class="font-extrabold text-sm text-slate-100">₹{{ cashMonthlyBudget | number:'1.2-2' }}</p>
         </div>
         <div>
-          <p class="text-xs text-emerald-200 mb-0.5">Monthly Cash Expense</p>
-          <p class="font-bold text-lg text-rose-200">₹{{ cashMonthlyExpense | number:'1.2-2' }}</p>
+          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Cash Expense</p>
+          <p class="font-extrabold text-sm text-rose-300">₹{{ cashMonthlyExpense | number:'1.2-2' }}</p>
         </div>
       </div>
     </div>
+
   </div>
 
-  <!-- Charts & Transactions Row -->
+  <!-- Analytics and logs Section -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Chart -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 lg:col-span-2">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-lg font-bold text-slate-800">Cash & Bank Analytics</h3>
+    
+    <!-- Analytics Chart -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm lg:col-span-2 flex flex-col justify-between">
+      <div class="flex items-center justify-between border-b border-slate-50 pb-4 mb-4">
+        <div>
+          <h3 class="text-lg font-black text-slate-800">Financial Trend Analysis</h3>
+          <p class="text-xs text-slate-400 font-semibold mt-0.5">Visual analytics for bank and cash outflows</p>
+        </div>
         <select 
           [value]="selectedPeriod" 
           (change)="onPeriodChange(periodSelect.value)" 
           #periodSelect
-          class="bg-slate-50 border-none rounded-lg text-sm text-slate-600 font-medium py-2 px-3 outline-none cursor-pointer hover:bg-slate-100 transition-colors"
+          class="bg-slate-50 hover:bg-slate-100 border border-slate-150 rounded-xl text-xs font-bold py-2 px-3 outline-none cursor-pointer transition-all text-slate-600"
         >
-          <option value="6months">Last 6 Months</option>
-          <option value="year">This Year</option>
+          <option value="6months">📅 Last 6 Months</option>
+          <option value="year">📅 Full Current Year</option>
         </select>
       </div>
-      <div class="h-72 w-full relative">
+      
+      <div class="h-80 w-full relative">
         <canvas #expenseChart></canvas>
       </div>
     </div>
 
     <!-- Recent Transactions -->
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-lg font-bold text-slate-800">Recent Transactions</h3>
-        <button routerLink="/expenses" class="text-indigo-600 text-sm font-semibold hover:text-indigo-800">View All</button>
+    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between border-b border-slate-50 pb-4 mb-4">
+        <div>
+          <h3 class="text-lg font-black text-slate-800">Recent Activity</h3>
+          <p class="text-xs text-slate-400 font-semibold mt-0.5">Your latest debit logs</p>
+        </div>
+        <button routerLink="/expenses" class="text-indigo-600 text-xs font-black uppercase tracking-wider hover:text-indigo-800 transition-colors">
+          View Statement
+        </button>
       </div>
-      <div class="space-y-4">
+
+      <div class="space-y-3.5 flex-1 overflow-y-auto max-h-80 pr-1">
+        @if (recentTransactions.length === 0) {
+          <div class="text-center py-12 text-slate-400 text-xs font-bold">
+            No recent activity recorded.
+          </div>
+        }
         @for (tx of recentTransactions; track tx.id) {
-          <div class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer">
-            <div class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center {{ tx.bg }} {{ tx.color }}">
-                <span class="font-bold text-sm">{{ tx.category[0] }}</span>
+          <div class="flex items-center justify-between p-3 bg-slate-50/50 hover:bg-slate-50 rounded-2xl transition-all border border-slate-100/50 group cursor-pointer">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 shadow-inner {{ tx.bg }} {{ tx.color }}">
+                {{ tx.category[0] }}
               </div>
-              <div>
-                <p class="font-semibold text-slate-800 text-sm">{{ tx.title }}</p>
-                <p class="text-xs text-slate-500">{{ tx.date | date:'mediumDate' }}</p>
+              <div class="overflow-hidden">
+                <p class="font-extrabold text-slate-700 text-sm truncate group-hover:text-indigo-600 transition-colors">{{ tx.title }}</p>
+                <p class="text-[10px] text-slate-400 mt-0.5 font-bold">{{ tx.date | date:'mediumDate' }}</p>
               </div>
             </div>
-            <p class="font-bold text-slate-800 text-sm">-₹{{ tx.amount | number:'1.2-2' }}</p>
+            <div class="text-right shrink-0">
+              <p class="font-black text-slate-800 text-sm">-₹{{ tx.amount | number:'1.2-2' }}</p>
+              <span class="text-[9px] bg-slate-200/50 text-slate-500 font-black px-1.5 py-0.5 rounded-md uppercase mt-1 inline-block">
+                Paid
+              </span>
+            </div>
           </div>
         }
       </div>
     </div>
+
   </div>
+
 </div>
