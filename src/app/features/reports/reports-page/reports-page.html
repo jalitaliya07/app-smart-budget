@@ -133,7 +133,7 @@
                 <span class="text-slate-500">₹{{ b.spent.toLocaleString() }} / ₹{{ b.limit.toLocaleString() }}</span>
               </div>
               <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div [class]="b.color + ' h-full rounded-full transition-all'" [style.width]="(b.spent / b.limit * 100) + '%'"></div>
+                <div class="h-full rounded-full transition-all" [style.backgroundColor]="b.color || '#6366f1'" [style.width]="(b.spent / b.limit * 100) + '%'"></div>
               </div>
             </div>
           }
@@ -191,7 +191,11 @@
                   {{ exp.description }}
                 </td>
                 <td class="p-3 text-xs">
-                  <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 {{ exp.color }}">
+                  <span 
+                    class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1 shadow-sm"
+                    [style.backgroundColor]="(exp.color || '#6366f1') + '20'"
+                    [style.color]="exp.color || '#6366f1'"
+                  >
                     <span>{{ exp.icon }}</span> {{ exp.category }}
                   </span>
                 </td>

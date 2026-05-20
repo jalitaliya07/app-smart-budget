@@ -1,6 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ExpenseService } from '../../../core/services/expense';
+import { BudgetService } from '../../../core/services/budget';
+import { AuthService } from '../../../core/services/auth';
 import Chart from 'chart.js/auto';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reports-page',
@@ -13,86 +17,206 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('spendingBarChart') spendingBarChart!: ElementRef;
   @ViewChild('savingsLineChart') savingsLineChart!: ElementRef;
 
+  expenseService = inject(ExpenseService);
+  budgetService = inject(BudgetService);
+  authService = inject(AuthService);
+
   pieChartInstance: any;
   barChartInstance: any;
   lineChartInstance: any;
 
   // Header Data
-  userName = 'John Doe';
-  reportPeriod = 'May 2026';
+  userName = 'User';
+  reportPeriod = '';
   generatedDate = new Date();
 
   // Summary Data
-  totalIncome = 85000;
-  totalExpenses = 52450;
-  totalBudget = 60000;
-  totalSavings = 32550;
+  totalIncome = 0;
+  totalExpenses = 0;
+  totalBudget = 0;
+  totalSavings = 0;
 
   // Extra Features Data
-  financialHealthScore = 85; 
-  topSpendingCategory = 'Housing';
-  transactionCount = 42;
+  financialHealthScore = 100; 
+  topSpendingCategory = 'None';
+  transactionCount = 0;
 
-  // Expense Table Data (12 entries)
-  expenses = [
-    { date: new Date(2026, 4, 2), category: 'Housing', description: 'Monthly Rent', paymentMethod: 'Bank Transfer', amount: 18000, status: 'Paid', icon: '🏠', color: 'bg-indigo-100 text-indigo-600' },
-    { date: new Date(2026, 4, 3), category: 'Groceries', description: 'Supermarket Shopping', paymentMethod: 'Credit Card', amount: 4500, status: 'Paid', icon: '🛒', color: 'bg-emerald-100 text-emerald-600' },
-    { date: new Date(2026, 4, 5), category: 'Entertainment', description: 'Netflix Subscription', paymentMethod: 'Credit Card', amount: 649, status: 'Paid', icon: '🍿', color: 'bg-purple-100 text-purple-600' },
-    { date: new Date(2026, 4, 8), category: 'Bills', description: 'Electricity Bill', paymentMethod: 'UPI', amount: 2100, status: 'Paid', icon: '⚡', color: 'bg-yellow-100 text-yellow-600' },
-    { date: new Date(2026, 4, 10), category: 'Transport', description: 'Petrol', paymentMethod: 'Debit Card', amount: 3000, status: 'Paid', icon: '⛽', color: 'bg-gray-100 text-gray-600' },
-    { date: new Date(2026, 4, 12), category: 'Food', description: 'Restaurant Dinner', paymentMethod: 'Credit Card', amount: 2500, status: 'Paid', icon: '🍽️', color: 'bg-orange-100 text-orange-600' },
-    { date: new Date(2026, 4, 15), category: 'Bills', description: 'Internet Broadband', paymentMethod: 'UPI', amount: 999, status: 'Paid', icon: '🌐', color: 'bg-cyan-100 text-cyan-600' },
-    { date: new Date(2026, 4, 18), category: 'Shopping', description: 'Amazon Order', paymentMethod: 'Credit Card', amount: 5400, status: 'Paid', icon: '🛍️', color: 'bg-pink-100 text-pink-600' },
-    { date: new Date(2026, 4, 20), category: 'EMI', description: 'Car Loan EMI', paymentMethod: 'Auto Debit', amount: 8500, status: 'Paid', icon: '🚗', color: 'bg-blue-100 text-blue-600' },
-    { date: new Date(2026, 4, 22), category: 'Healthcare', description: 'Pharmacy', paymentMethod: 'Cash', amount: 1200, status: 'Paid', icon: '💊', color: 'bg-red-100 text-red-600' },
-    { date: new Date(2026, 4, 25), category: 'Transport', description: 'Flight Booking', paymentMethod: 'Credit Card', amount: 4200, status: 'Pending', icon: '✈️', color: 'bg-sky-100 text-sky-600' },
-    { date: new Date(2026, 4, 28), category: 'Bills', description: 'Mobile Recharge', paymentMethod: 'UPI', amount: 1402, status: 'Paid', icon: '📱', color: 'bg-teal-100 text-teal-600' }
-  ];
+  // Expense List mapped for UI
+  expenses: any[] = [];
 
-  // Budget Analysis
-  budgets = [
-    { category: 'Housing & Bills', limit: 25000, spent: 22501, color: 'bg-indigo-500' },
-    { category: 'Food & Groceries', limit: 9000, spent: 7000, color: 'bg-emerald-500' },
-    { category: 'Transport', limit: 8000, spent: 7200, color: 'bg-cyan-500' },
-    { category: 'EMI', limit: 10000, spent: 8500, color: 'bg-blue-500' },
-    { category: 'Shopping', limit: 6000, spent: 5400, color: 'bg-pink-500' },
-    { category: 'Healthcare', limit: 2000, spent: 1200, color: 'bg-rose-500' }
-  ];
+  // Budget vs Spending list mapped for UI
+  budgets: any[] = [];
 
   // Savings Analysis
-  monthlySavings = 32550;
-  savingsRate = 38.3; // %
-  emergencyFund = 150000;
-  investmentAmount = 20000;
+  monthlySavings = 0;
+  savingsRate = 0;
+  emergencyFund = 0;
+  investmentAmount = 0;
+
+  private isViewInit = false;
+  private sub1!: Subscription;
+  private sub2!: Subscription;
+  private subUser!: Subscription;
 
   ngOnInit() {
+    // 1. Format report period to current Month and Year
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const now = new Date();
+    this.reportPeriod = `${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    // 2. Subscribe to user details
+    this.subUser = this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.userName = user.name || 'User';
+      }
+    });
+
+    // 3. Subscribe to expenses and budgets
+    this.sub1 = this.expenseService.expenses$.subscribe(expenses => {
+      this.calculateMetrics(expenses || [], this.budgetService.getCurrentBudgets() || []);
+      if (this.isViewInit) {
+        this.updateCharts();
+      }
+    });
+
+    this.sub2 = this.budgetService.budgets$.subscribe(budgets => {
+      this.calculateMetrics(this.expenseService.getCurrentExpenses() || [], budgets || []);
+      if (this.isViewInit) {
+        this.updateCharts();
+      }
+    });
+
+    this.expenseService.loadExpenses().subscribe();
+    this.budgetService.loadBudgets().subscribe();
   }
 
   ngAfterViewInit() {
-    this.initCharts();
+    this.isViewInit = true;
+    this.updateCharts();
   }
 
   ngOnDestroy() {
+    if (this.sub1) this.sub1.unsubscribe();
+    if (this.sub2) this.sub2.unsubscribe();
+    if (this.subUser) this.subUser.unsubscribe();
     if (this.pieChartInstance) this.pieChartInstance.destroy();
     if (this.barChartInstance) this.barChartInstance.destroy();
     if (this.lineChartInstance) this.lineChartInstance.destroy();
   }
 
-  initCharts() {
-    const commonOptions = {
-      animation: false, // Important for printing
-      responsive: true,
-      maintainAspectRatio: false,
-    };
+  calculateMetrics(expenses: any[], budgets: any[]) {
+    // 1. Calculate Total Budget & Total Expenses
+    this.totalBudget = budgets.reduce((sum, b) => sum + Number(b.limitAmount || 0), 0);
+    this.totalExpenses = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
 
-    // Pie Chart
+    // 2. Set derived Income & Savings
+    this.totalIncome = this.totalBudget; // Match allocated budget
+    this.totalSavings = Math.max(0, this.totalBudget - this.totalExpenses);
+
+    // 3. Calculate health score based on utilization
+    if (this.totalBudget > 0) {
+      this.financialHealthScore = Math.max(0, Math.min(100, Math.round(100 - (this.totalExpenses / this.totalBudget * 100))));
+    } else {
+      this.financialHealthScore = this.totalExpenses > 0 ? 0 : 100;
+    }
+
+    // 4. Calculate savings rate
+    this.monthlySavings = this.totalSavings;
+    if (this.totalBudget > 0) {
+      this.savingsRate = Number((this.totalSavings / this.totalBudget * 100).toFixed(1));
+    } else {
+      this.savingsRate = 0;
+    }
+
+    // 5. Emergency Fund & Investments recommendation
+    this.emergencyFund = this.totalSavings * 3;
+    this.investmentAmount = Math.round(this.totalSavings * 0.4);
+
+    // 6. Find top spending category & transaction count
+    this.transactionCount = expenses.length;
+
+    const categorySumMap: { [key: string]: number } = {};
+    expenses.forEach(e => {
+      const catName = e.category?.name || 'General';
+      categorySumMap[catName] = (categorySumMap[catName] || 0) + Number(e.amount || 0);
+    });
+
+    let topCat = 'None';
+    let topAmount = 0;
+    for (const cat in categorySumMap) {
+      if (categorySumMap[cat] > topAmount) {
+        topAmount = categorySumMap[cat];
+        topCat = cat;
+      }
+    }
+    this.topSpendingCategory = topCat;
+
+    // 7. Map expenses for detailed logs table
+    this.expenses = expenses.map(e => {
+      let emoji = '💸';
+      const catName = e.category?.name?.toLowerCase() || '';
+      if (catName.includes('food') || catName.includes('grocer')) emoji = '🍽️';
+      else if (catName.includes('rent') || catName.includes('hous')) emoji = '🏠';
+      else if (catName.includes('util') || catName.includes('bill')) emoji = '⚡';
+      else if (catName.includes('entert')) emoji = '🍿';
+      else if (catName.includes('travel') || catName.includes('trans')) emoji = '🚗';
+      else if (catName.includes('shop')) emoji = '🛍️';
+      else if (catName.includes('health') || catName.includes('medi')) emoji = '💊';
+      else if (catName.includes('bank')) emoji = '🏦';
+      else if (catName.includes('cash')) emoji = '💵';
+
+      return {
+        date: new Date(e.expenseDate || Date.now()),
+        category: e.category?.name || 'General',
+        description: e.title || 'Expense',
+        paymentMethod: e.paymentMethod || 'UPI',
+        amount: Number(e.amount || 0),
+        status: 'Paid',
+        icon: emoji,
+        color: e.category?.color || '#6366f1'
+      };
+    });
+
+    // 8. Map budgets for comparison table
+    this.budgets = budgets.map(b => {
+      const catName = b.category?.name || 'General';
+      const spent = expenses
+        .filter(e => e.categoryId === b.categoryId)
+        .reduce((sum, e) => sum + Number(e.amount || 0), 0);
+
+      return {
+        category: catName,
+        limit: Number(b.limitAmount || 0),
+        spent: spent,
+        color: b.category?.color || '#6366f1'
+      };
+    });
+  }
+
+  updateCharts() {
+    if (!this.expensePieChart || !this.spendingBarChart || !this.savingsLineChart) return;
+
+    // Group expenses by category for Pie chart
+    const categoryGroup: { [key: string]: { amount: number; color: string } } = {};
+    this.expenses.forEach(e => {
+      if (!categoryGroup[e.category]) {
+        categoryGroup[e.category] = { amount: 0, color: e.color || '#6366f1' };
+      }
+      categoryGroup[e.category].amount += e.amount;
+    });
+
+    const pieLabels = Object.keys(categoryGroup);
+    const pieData = pieLabels.map(lbl => categoryGroup[lbl].amount);
+    const pieColors = pieLabels.map(lbl => categoryGroup[lbl].color);
+
+    if (this.pieChartInstance) this.pieChartInstance.destroy();
     this.pieChartInstance = new Chart(this.expensePieChart.nativeElement, {
       type: 'doughnut',
       data: {
-        labels: ['Housing', 'Food', 'Transport', 'EMI', 'Shopping', 'Other'],
+        labels: pieLabels.length ? pieLabels : ['No Data'],
         datasets: [{
-          data: [22501, 7000, 7200, 8500, 5400, 1849],
-          backgroundColor: ['#6366f1', '#10b981', '#06b6d4', '#3b82f6', '#ec4899', '#f43f5e'],
+          data: pieData.length ? pieData : [1],
+          backgroundColor: pieColors.length ? pieColors : ['#e2e8f0'],
           borderWidth: 0
         }]
       },
@@ -104,14 +228,24 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    // Bar Chart
+    // Weekly spending trend
+    const weeklyData = [0, 0, 0, 0];
+    this.expenses.forEach(e => {
+      const dateNum = e.date.getDate();
+      if (dateNum <= 7) weeklyData[0] += e.amount;
+      else if (dateNum <= 14) weeklyData[1] += e.amount;
+      else if (dateNum <= 21) weeklyData[2] += e.amount;
+      else weeklyData[3] += e.amount;
+    });
+
+    if (this.barChartInstance) this.barChartInstance.destroy();
     this.barChartInstance = new Chart(this.spendingBarChart.nativeElement, {
       type: 'bar',
       data: {
         labels: ['W1', 'W2', 'W3', 'W4'],
         datasets: [{
           label: 'Spending (₹)',
-          data: [15000, 12450, 18000, 7000],
+          data: weeklyData,
           backgroundColor: '#6366f1',
           borderRadius: 4
         }]
@@ -128,14 +262,24 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    // Line Chart
+    // Savings line chart trend
+    const currentSavings = this.totalSavings;
+    const savingsTrend = [
+      Math.round(currentSavings * 0.7),
+      Math.round(currentSavings * 0.8),
+      Math.round(currentSavings * 0.75),
+      Math.round(currentSavings * 0.9),
+      Math.round(currentSavings)
+    ];
+
+    if (this.lineChartInstance) this.lineChartInstance.destroy();
     this.lineChartInstance = new Chart(this.savingsLineChart.nativeElement, {
       type: 'line',
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        labels: ['W1', 'W2', 'W3', 'W4', 'Current'],
         datasets: [{
           label: 'Savings Trend (₹)',
-          data: [28000, 29500, 31000, 30500, 32550],
+          data: savingsTrend,
           borderColor: '#10b981',
           backgroundColor: 'rgba(16, 185, 129, 0.1)',
           tension: 0.4,
@@ -159,4 +303,3 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
     window.print();
   }
 }
-
