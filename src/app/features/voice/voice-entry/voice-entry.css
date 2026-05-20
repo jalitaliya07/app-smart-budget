@@ -1,0 +1,70 @@
+/* Custom animation keyframes */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scrollbar styling for lists */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Floating Action Button overrides */
+.active-fab {
+  transform: rotate(135deg) scale(0.9);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3) !important;
+}
+
+.active-fab::after {
+  content: '✕';
+  position: absolute;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+/* Hide initial emoji inside the icon when active */
+.active-fab span {
+  display: none;
+}
+
+/* Glassmorphism card overrides */
+select option {
+  background-color: #ffffff;
+  color: #1e293b;
+}
+
+/* Pulse animation utility */
+.backdrop-blur-xs {
+  backdrop-filter: blur(2px);
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 640px) {
+  .fixed.bottom-24.right-6 {
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+  }
+}
