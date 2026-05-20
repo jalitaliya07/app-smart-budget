@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContextService } from '../../core/services/context';
+import { SidebarService } from '../../core/services/sidebar';
 
 @Component({
   selector: 'app-navbar',
@@ -15,8 +16,13 @@ export class Navbar implements OnInit {
   auth = inject(AuthService);
   router = inject(Router);
   contextService = inject(ContextService);
+  sidebarService = inject(SidebarService);
 
   selectedContext = 'All';
+
+  toggleSidebar() {
+    this.sidebarService.toggle();
+  }
 
   showProfileDropdown = false;
   showNotificationDropdown = false;

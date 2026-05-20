@@ -1,7 +1,19 @@
 <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-50 shadow-sm">
-  <div>
-    <h1 class="text-2xl font-bold text-slate-800">Overview</h1>
-    <p class="text-sm text-slate-500">Welcome back, here's your financial overview.</p>
+  <div class="flex items-center gap-3">
+    <!-- Hamburger button for mobile and tablet -->
+    <button 
+      (click)="toggleSidebar()" 
+      class="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+      aria-label="Toggle Sidebar"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Overview</h1>
+      <p class="text-sm text-slate-500 hidden sm:block">Welcome back, here's your financial overview.</p>
+    </div>
   </div>
 
   <div class="flex items-center gap-6">
