@@ -12,17 +12,75 @@
     </div>
 
     <!-- Notifications -->
-    <button class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors relative">
-      <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-      <div class="w-4 h-4 bg-slate-500 rounded-full"></div>
-    </button>
+    <div class="relative">
+      <button 
+        (click)="toggleNotifications()"
+        class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors relative outline-none"
+      >
+        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white animate-pulse"></span>
+        <span class="text-lg">🔔</span>
+      </button>
+
+      <!-- Notification Dropdown -->
+      <div 
+        *ngIf="showNotificationDropdown" 
+        class="absolute right-0 top-12 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 overflow-hidden"
+      >
+        <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+          <span class="font-bold text-slate-800 text-sm">Notifications</span>
+          <span class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">New</span>
+        </div>
+        <div class="divide-y divide-slate-100 max-h-80 overflow-y-auto">
+          <div 
+            *ngFor="let notif of notifications" 
+            class="p-3.5 hover:bg-slate-50 transition-all flex gap-3 items-start cursor-pointer"
+          >
+            <span class="text-lg mt-0.5">{{ notif.icon }}</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-semibold text-slate-800 leading-normal">{{ notif.title }}</p>
+              <p class="text-[10px] text-slate-500 mt-0.5 leading-relaxed">{{ notif.message }}</p>
+              <p class="text-[9px] text-slate-400 mt-1 font-medium">{{ notif.time }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Profile -->
-    <div class="flex items-center gap-3 border-l border-slate-200 pl-6">
-      <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center border-2 border-white shadow-md cursor-pointer">
-        <span class="text-indigo-700 font-bold">U</span>
+    <div class="flex items-center gap-3 border-l border-slate-200 pl-6 relative">
+      <div 
+        (click)="toggleProfile()"
+        class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center border-2 border-white shadow-md cursor-pointer hover:scale-105 transition-all select-none"
+      >
+        <span class="text-indigo-700 font-bold uppercase">{{ getInitials() }}</span>
       </div>
       <button (click)="logout()" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Logout</button>
+
+      <!-- Profile Dropdown -->
+      <div 
+        *ngIf="showProfileDropdown" 
+        class="absolute right-0 top-12 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3 mb-3">
+          <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+            <span class="text-indigo-700 font-bold uppercase">{{ getInitials() }}</span>
+          </div>
+          <div class="overflow-hidden">
+            <h4 class="font-bold text-slate-800 text-sm truncate">{{ currentUser?.name || 'User' }}</h4>
+            <p class="text-xs text-slate-500 truncate">{{ currentUser?.email || 'user@example.com' }}</p>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 text-xs text-slate-600 transition-colors">
+            <span>👤</span>
+            <span>Profile: {{ currentUser?.isDelegated ? 'Guest (Delegate)' : 'Account Owner' }}</span>
+          </div>
+          <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 text-xs text-slate-600 transition-colors">
+            <span>🛡️</span>
+            <span>Status: Approved</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
