@@ -5,6 +5,23 @@
   </div>
 
   <div class="flex items-center gap-6">
+    <!-- Context Dropdown (Company, Home, Personal) -->
+    <div class="relative flex items-center">
+      <select 
+        [(ngModel)]="selectedContext" 
+        (change)="onContextChange()"
+        class="pl-4 pr-10 py-2 bg-slate-100 hover:bg-slate-200 focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 rounded-xl text-sm font-bold transition-all outline-none border border-transparent cursor-pointer appearance-none text-slate-700 shadow-sm"
+      >
+        <option value="All">💼 All Accounts</option>
+        <option value="Personal">👤 Personal</option>
+        <option value="Home">🏠 Home</option>
+        <option value="Company">🏢 Company</option>
+      </select>
+      <div class="absolute right-3.5 top-3.5 pointer-events-none flex items-center">
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+    </div>
+
     <!-- Search -->
     <div class="relative">
       <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 rounded-xl text-sm transition-all outline-none w-64" />

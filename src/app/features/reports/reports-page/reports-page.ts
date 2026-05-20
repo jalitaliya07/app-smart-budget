@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ExpenseService } from '../../../core/services/expense';
 import { BudgetService } from '../../../core/services/budget';
 import { AuthService } from '../../../core/services/auth';
+import { ContextService } from '../../../core/services/context';
 import Chart from 'chart.js/auto';
 import { Subscription } from 'rxjs';
 
@@ -20,6 +21,7 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
   expenseService = inject(ExpenseService);
   budgetService = inject(BudgetService);
   authService = inject(AuthService);
+  contextService = inject(ContextService);
 
   pieChartInstance: any;
   barChartInstance: any;
@@ -57,6 +59,7 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
   private sub1!: Subscription;
   private sub2!: Subscription;
   private subUser!: Subscription;
+  private subContext!: Subscription;
 
   ngOnInit() {
     // 1. Format report period to current Month and Year
@@ -86,6 +89,17 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
+    // 4. Subscribe to context changes
+    this.subContext = this.contextService.context$.subscribe(() => {
+      this.calculateMetrics(
+        this.expenseService.getCurrentExpenses() || [],
+        this.budgetService.getCurrentBudgets() || []
+      );
+      if (this.isViewInit) {
+        this.updateCharts();
+      }
+    });
+
     this.expenseService.loadExpenses().subscribe();
     this.budgetService.loadBudgets().subscribe();
   }
@@ -99,12 +113,17 @@ export class ReportsPage implements OnInit, AfterViewInit, OnDestroy {
     if (this.sub1) this.sub1.unsubscribe();
     if (this.sub2) this.sub2.unsubscribe();
     if (this.subUser) this.subUser.unsubscribe();
+    if (this.subContext) this.subContext.unsubscribe();
     if (this.pieChartInstance) this.pieChartInstance.destroy();
     if (this.barChartInstance) this.barChartInstance.destroy();
     if (this.lineChartInstance) this.lineChartInstance.destroy();
   }
 
-  calculateMetrics(expenses: any[], budgets: any[]) {
+  calculateMetrics(rawExpenses: any[], rawBudgets: any[]) {
+    const context = this.contextService.getCurrentContext();
+    const expenses = rawExpenses.filter(e => this.contextService.filterItem(e, context));
+    const budgets = rawBudgets.filter(b => this.contextService.filterItem(b, context));
+
     // 1. Calculate Total Budget & Total Expenses
     this.totalBudget = budgets.reduce((sum, b) => sum + Number(b.limitAmount || 0), 0);
     this.totalExpenses = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);

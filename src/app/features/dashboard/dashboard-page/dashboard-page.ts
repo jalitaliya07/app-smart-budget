@@ -6,6 +6,7 @@ import { BudgetService } from '../../../core/services/budget';
 import Chart from 'chart.js/auto';
 import { Subscription } from 'rxjs';
 import { BankService } from '../../../core/services/bank';
+import { ContextService } from '../../../core/services/context';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -19,6 +20,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   expenseService = inject(ExpenseService);
   budgetService = inject(BudgetService);
   bankService = inject(BankService);
+  contextService = inject(ContextService);
 
   activeBanks: any[] = [];
   selectedBank = 'All';
@@ -41,6 +43,7 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
   private sub1!: Subscription;
   private sub2!: Subscription;
+  private sub3!: Subscription;
 
   ngOnInit() {
     this.sub1 = this.expenseService.expenses$.subscribe(expenses => {
@@ -49,6 +52,13 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
 
     this.sub2 = this.budgetService.budgets$.subscribe(budgets => {
       this.calculateMetrics(this.expenseService.getCurrentExpenses() || [], budgets || []);
+    });
+
+    this.sub3 = this.contextService.context$.subscribe(() => {
+      this.calculateMetrics(
+        this.expenseService.getCurrentExpenses() || [],
+        this.budgetService.getCurrentBudgets() || []
+      );
     });
 
     this.expenseService.loadExpenses().subscribe();
@@ -84,10 +94,15 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     if (this.sub1) this.sub1.unsubscribe();
     if (this.sub2) this.sub2.unsubscribe();
+    if (this.sub3) this.sub3.unsubscribe();
     if (this.chartInstance) this.chartInstance.destroy();
   }
 
-  calculateMetrics(expenses: any[], budgets: any[]) {
+  calculateMetrics(rawExpenses: any[], rawBudgets: any[]) {
+    const context = this.contextService.getCurrentContext();
+    const expenses = rawExpenses.filter(e => this.contextService.filterItem(e, context));
+    const budgets = rawBudgets.filter(b => this.contextService.filterItem(b, context));
+
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentYear = now.getFullYear();
@@ -202,8 +217,12 @@ export class DashboardPage implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  updateChartData(expenses: any[], budgets: any[]) {
+  updateChartData(rawExpenses: any[], rawBudgets: any[]) {
     if (!this.chartInstance) return;
+
+    const context = this.contextService.getCurrentContext();
+    const expenses = rawExpenses.filter(e => this.contextService.filterItem(e, context));
+    const budgets = rawBudgets.filter(b => this.contextService.filterItem(b, context));
 
     const now = new Date();
     const currentYear = now.getFullYear();

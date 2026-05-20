@@ -2,16 +2,21 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ContextService } from '../../core/services/context';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class Navbar implements OnInit {
   auth = inject(AuthService);
   router = inject(Router);
+  contextService = inject(ContextService);
+
+  selectedContext = 'All';
 
   showProfileDropdown = false;
   showNotificationDropdown = false;
@@ -71,6 +76,10 @@ export class Navbar implements OnInit {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
     return parts[0][0].toUpperCase();
+  }
+
+  onContextChange() {
+    this.contextService.setContext(this.selectedContext);
   }
 
   logout() {
