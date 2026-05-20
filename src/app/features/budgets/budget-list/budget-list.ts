@@ -24,6 +24,7 @@ export class BudgetList implements OnInit {
   categories: any[] = [];
 
   isAddOpen = false;
+  editingBudgetId: number | null = null;
   newBudget = { categoryId: '', limitAmount: '', bankName: '' };
 
   banks: any[] = [];
@@ -109,11 +110,44 @@ export class BudgetList implements OnInit {
     return pct > 100 ? 100 : Math.round(pct);
   }
 
+  openAddModal() {
+    this.editingBudgetId = null;
+    this.newBudget = { 
+      categoryId: this.bankAndCashCategories[0]?.id || '', 
+      limitAmount: '', 
+      bankName: this.banks[0]?.name || '' 
+    };
+    this.isAddOpen = true;
+  }
+
+  openEditModal(budget: any) {
+    this.editingBudgetId = budget.id;
+    this.newBudget = {
+      categoryId: budget.categoryId.toString(),
+      limitAmount: budget.limitAmount.toString(),
+      bankName: budget.bankName || ''
+    };
+    this.isAddOpen = true;
+  }
+
+  deleteBudget(id: number) {
+    if (confirm('Are you sure you want to delete this budget limit?')) {
+      this.budgetService.deleteBudget(id).subscribe({
+        next: () => {
+          this.toastService.show('Budget Deleted', 'Category budget has been removed.', 'success');
+        },
+        error: () => {
+          this.toastService.show('Error', 'Failed to delete budget.', 'error');
+        }
+      });
+    }
+  }
+
   saveBudget() {
     if (!this.newBudget.categoryId || !this.newBudget.limitAmount) return;
 
     const payload: any = {
-      categoryId: this.newBudget.categoryId,
+      categoryId: parseInt(this.newBudget.categoryId),
       limitAmount: parseFloat(this.newBudget.limitAmount),
       month: new Date().getMonth() + 1,
       year: new Date().getFullYear()
@@ -121,23 +155,33 @@ export class BudgetList implements OnInit {
 
     if (this.isBankSelected) {
       payload.bankName = this.newBudget.bankName;
+    } else {
+      payload.bankName = null;
     }
 
     const cat = this.categories.find(c => c.id == this.newBudget.categoryId);
 
-    this.budgetService.createBudget(payload, cat).subscribe({
-      next: () => {
-        this.toastService.show('Budget Set', `Successfully set budget for ${cat?.name || 'Category'}.`, 'success');
-        this.isAddOpen = false;
-        this.newBudget = { 
-          categoryId: this.bankAndCashCategories[0]?.id || '', 
-          limitAmount: '', 
-          bankName: this.banks[0]?.name || '' 
-        };
-      },
-      error: () => {
-        this.toastService.show('Error', 'Failed to set budget.', 'error');
-      }
-    });
+    if (this.editingBudgetId) {
+      this.budgetService.updateBudget(this.editingBudgetId, payload).subscribe({
+        next: () => {
+          this.toastService.show('Budget Updated', `Successfully updated budget for ${cat?.name || 'Category'}.`, 'success');
+          this.isAddOpen = false;
+          this.editingBudgetId = null;
+        },
+        error: () => {
+          this.toastService.show('Error', 'Failed to update budget.', 'error');
+        }
+      });
+    } else {
+      this.budgetService.createBudget(payload, cat).subscribe({
+        next: () => {
+          this.toastService.show('Budget Set', `Successfully set budget for ${cat?.name || 'Category'}.`, 'success');
+          this.isAddOpen = false;
+        },
+        error: () => {
+          this.toastService.show('Error', 'Failed to set budget.', 'error');
+        }
+      });
+    }
   }
 }

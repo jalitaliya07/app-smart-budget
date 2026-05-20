@@ -43,4 +43,34 @@ export class BudgetService {
   getCurrentBudgets(): any[] {
     return this.budgetsSubject.value || [];
   }
+
+  updateBudget(id: number, budget: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, budget).pipe(
+      tap(updatedBudget => {
+        const current = this.budgetsSubject.value;
+        const index = current.findIndex(b => b.id === id);
+        if (index > -1) {
+          const updatedList = [...current];
+          updatedList[index] = updatedBudget;
+          this.budgetsSubject.next(updatedList);
+        }
+      }),
+      catchError(err => {
+        throw err;
+      })
+    );
+  }
+
+  deleteBudget(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => {
+        const current = this.budgetsSubject.value;
+        const updatedList = current.filter(b => b.id !== id);
+        this.budgetsSubject.next(updatedList);
+      }),
+      catchError(err => {
+        throw err;
+      })
+    );
+  }
 }
