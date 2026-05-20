@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
 
 interface IWindow extends Window {
@@ -11,6 +11,21 @@ interface IWindow extends Window {
 @Injectable({ providedIn: 'root' })
 export class VoiceService {
   private http = inject(HttpClient);
+
+  private isOpenSubject = new BehaviorSubject<boolean>(false);
+  public isOpen$ = this.isOpenSubject.asObservable();
+
+  toggle() {
+    this.isOpenSubject.next(!this.isOpenSubject.value);
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isOpenSubject.next(isOpen);
+  }
+
+  isOpen(): boolean {
+    return this.isOpenSubject.value;
+  }
   
   parseVoiceText(text: string): Observable<any> {
     return this.http.post(`${API_BASE_URL}/api/voice-expense/parse`, { text });

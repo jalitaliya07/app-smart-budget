@@ -2,6 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { SidebarService } from '../../core/services/sidebar';
+import { VoiceService } from '../../core/services/voice.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,10 +14,16 @@ import { Subscription } from 'rxjs';
 export class Sidebar implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private sidebarService = inject(SidebarService);
+  private voiceService = inject(VoiceService);
 
   isOpen = false;
   private subUser!: Subscription;
   private subSidebar!: Subscription;
+
+  toggleVoice() {
+    this.voiceService.toggle();
+    this.closeSidebarOnMobile();
+  }
 
   baseMenuItems = [
     { label: 'Dashboard', emoji: '📊', route: '/dashboard' },

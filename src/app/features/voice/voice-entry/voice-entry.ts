@@ -41,8 +41,17 @@ export class VoiceEntry implements OnInit, OnDestroy {
     { code: 'gu-IN', label: '🇮🇳 Gujarati' }
   ];
 
+  private subOpen!: Subscription;
+
   ngOnInit() {
     this.initSpeechRecognition();
+    this.subOpen = this.voiceService.isOpen$.subscribe(open => {
+      this.isOpen = open;
+      if (open) {
+        this.loadHistory();
+        this.loadAnalytics();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -50,6 +59,9 @@ export class VoiceEntry implements OnInit, OnDestroy {
       try {
         this.recognition.abort();
       } catch (e) {}
+    }
+    if (this.subOpen) {
+      this.subOpen.unsubscribe();
     }
   }
 
@@ -99,11 +111,7 @@ export class VoiceEntry implements OnInit, OnDestroy {
   }
 
   toggleWidget() {
-    this.isOpen = !this.isOpen;
-    if (this.isOpen) {
-      this.loadHistory();
-      this.loadAnalytics();
-    }
+    this.voiceService.toggle();
   }
 
   toggleHistory() {

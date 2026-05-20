@@ -50,6 +50,15 @@
         <span class="menu-label text-sm">{{ item.label }}</span>
       </a>
     }
+    
+    <!-- Voice Entry trigger button styled identically -->
+    <button 
+      (click)="toggleVoice()" 
+      class="menu-button w-full flex items-center gap-4 rounded-xl transition-all font-medium text-left border-none bg-transparent cursor-pointer"
+    >
+      <span class="menu-icon text-lg w-5 h-5 flex items-center justify-center shrink-0">🎙️</span>
+      <span class="menu-label text-sm">Voice Entry</span>
+    </button>
   </nav>
 
   <!-- Pro Plan Banner -->
