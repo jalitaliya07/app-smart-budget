@@ -30,7 +30,7 @@ export class Register {
     this.isLoading = true;
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.error = err.error?.error || 'Registration failed';

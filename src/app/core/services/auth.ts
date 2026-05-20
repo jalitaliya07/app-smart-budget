@@ -40,7 +40,15 @@ export class AuthService {
   }
 
   register(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, data);
+    return this.http.post<any>(`${this.apiUrl}/register`, data).pipe(
+      tap(response => {
+        if (response.token && response.user) {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          this.currentUserSubject.next(response.user);
+        }
+      })
+    );
   }
 
   logout() {
