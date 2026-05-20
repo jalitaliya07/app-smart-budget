@@ -2,13 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap, Observable } from 'rxjs';
 
+import { API_BASE_URL } from '../config/api.config';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/auth';
-  private delegateUrl = 'http://localhost:3000/api/delegate';
+  private apiUrl = `${API_BASE_URL}/api/auth`;
+  private delegateUrl = `${API_BASE_URL}/api/delegate`;
   private currentUserSubject = new BehaviorSubject<any>(null);
   
   public currentUser$ = this.currentUserSubject.asObservable();

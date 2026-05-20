@@ -29,12 +29,14 @@ export interface UsersResponse {
   stats: UserStats;
 }
 
+import { API_BASE_URL } from '../config/api.config';
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/users';
+  private apiUrl = `${API_BASE_URL}/api/users`;
 
   getUsers(page: number = 1, limit: number = 10, search: string = '', status: string = ''): Observable<UsersResponse> {
     let params = new HttpParams()

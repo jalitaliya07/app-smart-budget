@@ -2,10 +2,12 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, catchError, of } from 'rxjs';
 
+import { API_BASE_URL } from '../config/api.config';
+
 @Injectable({ providedIn: 'root' })
 export class BankService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/banks';
+  private apiUrl = `${API_BASE_URL}/api/banks`;
 
   private banksSubject = new BehaviorSubject<any[]>([]);
   public banks$ = this.banksSubject.asObservable();
