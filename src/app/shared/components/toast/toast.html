@@ -1,0 +1,19 @@
+<div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none">
+  @for (toast of toastService.toasts$ | async; track toast.id) {
+    <div class="pointer-events-auto flex items-start gap-3 p-4 rounded-2xl shadow-xl backdrop-blur-md border transition-all animate-slide-in"
+         [class]="toast.type === 'success' ? 'bg-emerald-500/90 text-white border-emerald-400' :
+                  (toast.type === 'warning' ? 'bg-amber-500/90 text-white border-amber-400' :
+                  (toast.type === 'error' ? 'bg-rose-500/90 text-white border-rose-400' :
+                  'bg-slate-900/90 text-white border-slate-700'))">
+      
+      <div class="flex-1">
+        <h4 class="font-bold text-sm">{{ toast.title }}</h4>
+        <p class="text-xs opacity-90 mt-0.5">{{ toast.message }}</p>
+      </div>
+
+      <button (click)="toastService.remove(toast.id)" class="w-6 h-6 rounded-full hover:bg-white/20 flex items-center justify-center text-xs transition-colors">
+        ✕
+      </button>
+    </div>
+  }
+</div>

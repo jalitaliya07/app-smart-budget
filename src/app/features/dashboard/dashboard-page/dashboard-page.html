@@ -1,0 +1,156 @@
+<div class="space-y-6">
+  <!-- Top Stats Row -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Stat Card 1 -->
+    <div routerLink="/budgets" class="cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between group hover:shadow-md transition-shadow">
+      <div>
+        <p class="text-sm font-medium text-slate-500 mb-1">Total Balance</p>
+        <h3 class="text-2xl font-bold text-slate-800">₹{{ totalBalance | number:'1.2-2' }}</h3>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+        <span class="font-bold text-xl">₹</span>
+      </div>
+    </div>
+
+    <!-- Stat Card 2 -->
+    <div routerLink="/expenses" class="cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between group hover:shadow-md transition-shadow">
+      <div>
+        <p class="text-sm font-medium text-slate-500 mb-1">Monthly Expense</p>
+        <h3 class="text-2xl font-bold text-slate-800">₹{{ monthlyExpense | number:'1.2-2' }}</h3>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+        <span class="font-bold text-xl">↓</span>
+      </div>
+    </div>
+
+    <!-- Stat Card 3 -->
+    <div routerLink="/budgets" class="cursor-pointer bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between group hover:shadow-md transition-shadow">
+      <div>
+        <p class="text-sm font-medium text-slate-500 mb-1">Monthly Budget</p>
+        <h3 class="text-2xl font-bold text-slate-800">₹{{ monthlyBudget | number:'1.2-2' }}</h3>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+        <span class="font-bold text-xl">B</span>
+      </div>
+    </div>
+
+    <!-- Stat Card 4 -->
+    <div class="bg-gradient-to-br from-indigo-600 to-cyan-500 rounded-2xl p-6 shadow-lg shadow-indigo-500/30 text-white flex items-center justify-between transform hover:-translate-y-1 transition-transform">
+      <div>
+        <p class="text-sm font-medium opacity-80 mb-1">Total Savings</p>
+        <h3 class="text-2xl font-bold">₹{{ savings | number:'1.2-2' }}</h3>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+        <span class="font-bold text-xl">↑</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bank & Cash Account Breakdown Row -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Bank Card -->
+    <div routerLink="/banks" class="cursor-pointer bg-gradient-to-br from-indigo-600 to-cyan-600 rounded-3xl p-6 shadow-lg shadow-indigo-500/20 text-white flex flex-col justify-between h-52 relative overflow-hidden group hover:scale-[1.01] transition-all">
+      <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-white/5 group-hover:scale-110 transition-transform"></div>
+      <div class="flex justify-between items-start">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-indigo-100 block mb-1">Bank Account Overview</span>
+          <h4 class="text-3xl font-extrabold tracking-tight">₹{{ bankBalance | number:'1.2-2' }}</h4>
+          <span class="text-xs text-indigo-200 mt-1 block">Available Bank Balance</span>
+        </div>
+        <select 
+          [value]="selectedBank" 
+          (change)="onBankChange(bankSelect.value)" 
+          (click)="$event.stopPropagation()"
+          #bankSelect
+          class="bg-white/10 text-white rounded-full backdrop-blur-sm text-xs font-bold border border-white/15 px-3 py-1.5 outline-none cursor-pointer hover:bg-white/20 transition-colors relative z-20"
+        >
+          <option value="All" class="text-slate-800 font-semibold bg-white">All Banks</option>
+          @for (bank of activeBanks; track bank.id) {
+            <option [value]="bank.name" class="text-slate-800 font-semibold bg-white">{{ bank.name }}</option>
+          }
+        </select>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-4">
+        <div>
+          <p class="text-xs text-indigo-200 mb-0.5">Monthly Bank Budget</p>
+          <p class="font-bold text-lg">₹{{ bankMonthlyBudget | number:'1.2-2' }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-indigo-200 mb-0.5">Monthly Bank Expense</p>
+          <p class="font-bold text-lg text-rose-200">₹{{ bankMonthlyExpense | number:'1.2-2' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cash Card -->
+    <div class="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-3xl p-6 shadow-lg shadow-emerald-500/20 text-white flex flex-col justify-between h-52 relative overflow-hidden group hover:scale-[1.01] transition-all">
+      <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-white/5 group-hover:scale-110 transition-transform"></div>
+      <div class="flex justify-between items-start">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-emerald-100 block mb-1">Cash Account Overview</span>
+          <h4 class="text-3xl font-extrabold tracking-tight">₹{{ cashBalance | number:'1.2-2' }}</h4>
+          <span class="text-xs text-emerald-200 mt-1 block">Available Cash Balance</span>
+        </div>
+        <div class="px-3 py-1 bg-white/10 rounded-full backdrop-blur-sm text-xs font-bold border border-white/15">CASH</div>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-4">
+        <div>
+          <p class="text-xs text-emerald-200 mb-0.5">Monthly Cash Budget</p>
+          <p class="font-bold text-lg">₹{{ cashMonthlyBudget | number:'1.2-2' }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-emerald-200 mb-0.5">Monthly Cash Expense</p>
+          <p class="font-bold text-lg text-rose-200">₹{{ cashMonthlyExpense | number:'1.2-2' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts & Transactions Row -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Chart -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 lg:col-span-2">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-bold text-slate-800">Cash & Bank Analytics</h3>
+        <select 
+          [value]="selectedPeriod" 
+          (change)="onPeriodChange(periodSelect.value)" 
+          #periodSelect
+          class="bg-slate-50 border-none rounded-lg text-sm text-slate-600 font-medium py-2 px-3 outline-none cursor-pointer hover:bg-slate-100 transition-colors"
+        >
+          <option value="6months">Last 6 Months</option>
+          <option value="year">This Year</option>
+        </select>
+      </div>
+      <div class="h-72 w-full relative">
+        <canvas #expenseChart></canvas>
+      </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-bold text-slate-800">Recent Transactions</h3>
+        <button routerLink="/expenses" class="text-indigo-600 text-sm font-semibold hover:text-indigo-800">View All</button>
+      </div>
+      <div class="space-y-4">
+        @for (tx of recentTransactions; track tx.id) {
+          <div class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center {{ tx.bg }} {{ tx.color }}">
+                <span class="font-bold text-sm">{{ tx.category[0] }}</span>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800 text-sm">{{ tx.title }}</p>
+                <p class="text-xs text-slate-500">{{ tx.date | date:'mediumDate' }}</p>
+              </div>
+            </div>
+            <p class="font-bold text-slate-800 text-sm">-₹{{ tx.amount | number:'1.2-2' }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

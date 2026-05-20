@@ -1,0 +1,148 @@
+@import "tailwindcss";
+@source "./app";
+
+body {
+    background-color: var(--color-slate-50);
+    color: var(--color-slate-800);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Ensure smooth transition for all themeable components */
+* {
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.3s ease-out;
+}
+
+/* Redefine Tailwind v4 slate color tokens under dark mode class */
+.dark {
+    --color-white: #1e293b;        /* bg-white cards/panels become slate-800 */
+    --color-slate-50: #0f172a;     /* Main container background becomes slate-900 */
+    --color-slate-100: #334155;    /* Subtle borders (slate-100) become slate-700 */
+    --color-slate-200: #475569;    /* Strong borders (slate-200) become slate-600 */
+    --color-slate-300: #64748b;    /* Icons/sliders (slate-300) become slate-500 */
+    --color-slate-400: #94a3b8;    /* Muted colors/disabled (slate-400) become slate-400 */
+    --color-slate-500: #cbd5e1;    /* Caption/secondary text (slate-500) becomes slate-300 */
+    --color-slate-600: #e2e8f0;    /* Secondary headings (slate-600) become slate-200 */
+    --color-slate-700: #f1f5f9;    /* Body text (slate-700) becomes slate-100 */
+    --color-slate-800: #f8fafc;    /* Main title headings (slate-800) become slate-50 */
+}
+
+/* Custom dark mode adjustments for interactive components to look extremely premium */
+.dark input::placeholder, 
+.dark textarea::placeholder {
+    color: #64748b;
+}
+
+.dark input, 
+.dark select, 
+.dark textarea {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+.dark input:focus, 
+.dark select:focus, 
+.dark textarea:focus {
+    background-color: #0f172a !important;
+    border-color: var(--color-indigo-500) !important;
+}
+
+.dark select option {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+/* Global Print Styles */
+@media print {
+  /* Force background colors and text colors to print exactly */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Reset outer layout wrappers to allow natural multi-page flows */
+  html, body {
+    background-color: white !important;
+    background-image: none !important;
+    color: black !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  div.h-screen,
+  div.overflow-hidden,
+  div.overflow-y-auto,
+  main,
+  router-outlet {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide app sidebar, top navbar, toasts, buttons, and other controls */
+  app-sidebar,
+  app-navbar,
+  app-toast,
+  .no-print,
+  button {
+    display: none !important;
+  }
+
+  /* Specifically isolate and show #printable-bill when printing the reports page */
+  body:has(#printable-bill) .space-y-6 > :not(#printable-bill) {
+    display: none !important;
+  }
+
+  #printable-bill {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 24px !important;
+    margin: 0 !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+  }
+
+  /* Ensure text colors are readable on paper */
+  .text-slate-800, .text-slate-700, .text-slate-600, .text-slate-500 {
+    color: #1e293b !important;
+  }
+
+  /* Keep colors intact and vibrant for key indicators */
+  .text-indigo-600 {
+    color: #4f46e5 !important;
+    font-weight: bold;
+  }
+  .text-emerald-500, .text-emerald-600, .text-emerald-700 {
+    color: #059669 !important;
+    font-weight: bold;
+  }
+  .text-rose-500, .text-rose-600, .text-rose-700 {
+    color: #dc2626 !important;
+    font-weight: bold;
+  }
+  .text-cyan-500 {
+    color: #0891b2 !important;
+    font-weight: bold;
+  }
+
+  /* Keep the tables clean */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  th, td {
+    border-bottom: 1px solid #cbd5e1 !important;
+    padding: 8px !important;
+  }
+}

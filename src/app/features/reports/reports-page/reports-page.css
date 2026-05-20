@@ -1,0 +1,22 @@
+
+/* Beautiful on-screen style for the invoice */
+.invoice-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.invoice-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -10px rgba(99, 102, 241, 0.15);
+}
+
+.invoice-badge-positive {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: rgb(16, 185, 129);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.invoice-badge-negative {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: rgb(239, 68, 68);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}

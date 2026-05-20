@@ -1,0 +1,28 @@
+<header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-800">Overview</h1>
+    <p class="text-sm text-slate-500">Welcome back, here's your financial overview.</p>
+  </div>
+
+  <div class="flex items-center gap-6">
+    <!-- Search -->
+    <div class="relative">
+      <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 bg-slate-100 border-transparent focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 rounded-xl text-sm transition-all outline-none w-64" />
+      <div class="absolute left-3 top-2.5 w-4 h-4 bg-slate-400 rounded-full"></div>
+    </div>
+
+    <!-- Notifications -->
+    <button class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors relative">
+      <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+      <div class="w-4 h-4 bg-slate-500 rounded-full"></div>
+    </button>
+
+    <!-- Profile -->
+    <div class="flex items-center gap-3 border-l border-slate-200 pl-6">
+      <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center border-2 border-white shadow-md cursor-pointer">
+        <span class="text-indigo-700 font-bold">U</span>
+      </div>
+      <button (click)="logout()" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Logout</button>
+    </div>
+  </div>
+</header>

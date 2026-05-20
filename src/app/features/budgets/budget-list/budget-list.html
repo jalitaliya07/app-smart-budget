@@ -1,0 +1,109 @@
+<div class="space-y-6">
+  <!-- Top Bar -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800">Budget Allocation</h2>
+      <p class="text-sm text-slate-500">Monitor your category limits and prevent overspending.</p>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-4 self-start md:self-auto">
+      <div class="px-4 py-2 bg-slate-50 border border-slate-150/60 rounded-xl flex flex-col justify-center text-left sm:text-right">
+        <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Total Monthly Budget</span>
+        <span class="text-lg font-extrabold text-indigo-600">₹{{ totalMonthlyBudget | number:'1.2-2' }}</span>
+      </div>
+
+      <button (click)="isAddOpen = true" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-700 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2 self-start sm:self-auto">
+        <span class="text-xl">+</span> Set New Budget
+      </button>
+    </div>
+  </div>
+
+  <!-- Budget Cards Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (b of budgets; track b.id) {
+      <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between group hover:shadow-md transition-all relative overflow-hidden">
+        <!-- Top row -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold" [style.backgroundColor]="b.category.color">
+              {{ b.category.name[0] }}
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-800 text-lg">{{ b.category.name }}</h3>
+              @if (b.bankName) {
+                <span class="text-xs text-slate-400 font-semibold block">{{ b.bankName }}</span>
+              }
+            </div>
+          </div>
+          <span class="text-xs font-semibold px-3 py-1 rounded-full" 
+                [class]="b.currentSpent > b.limitAmount ? 'bg-rose-100 text-rose-600' : (b.currentSpent / b.limitAmount > 0.8 ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600')">
+            {{ b.currentSpent > b.limitAmount ? 'Overspent!' : (b.currentSpent / b.limitAmount > 0.8 ? 'Warning' : 'On Track') }}
+          </span>
+        </div>
+
+        <!-- Amounts -->
+        <div class="mb-4">
+          <div class="flex items-baseline justify-between mb-1">
+            <span class="text-2xl font-extrabold text-slate-900">₹{{ b.currentSpent | number:'1.2-2' }}</span>
+            <span class="text-sm font-semibold text-slate-400">of ₹{{ b.limitAmount | number:'1.2-2' }}</span>
+          </div>
+          <!-- Remaining -->
+          <p class="text-xs font-medium" [class]="b.currentSpent > b.limitAmount ? 'text-rose-500' : 'text-slate-500'">
+            {{ b.currentSpent > b.limitAmount ? '-₹' + ((b.currentSpent - b.limitAmount) | number:'1.2-2') + ' over budget' : '₹' + ((b.limitAmount - b.currentSpent) | number:'1.2-2') + ' remaining' }}
+          </p>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-500"
+               [style.width]="getPercentage(b.currentSpent, b.limitAmount) + '%'"
+               [style.backgroundColor]="b.currentSpent > b.limitAmount ? '#f43f5e' : (b.currentSpent / b.limitAmount > 0.8 ? '#f59e0b' : b.category.color)">
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Add Budget Modal -->
+  @if (isAddOpen) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+      <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 space-y-4 animate-scale-up">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <h3 class="text-xl font-bold text-slate-800">Set Category Budget</h3>
+          <button (click)="isAddOpen = false" class="text-slate-400 hover:text-slate-600">✕</button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Option Bank and Cash</label>
+            <select [(ngModel)]="newBudget.categoryId" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl text-sm transition-all outline-none">
+              @for (cat of bankAndCashCategories; track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+
+          @if (isBankSelected) {
+            <div class="animate-fade-in">
+              <label class="block text-sm font-medium text-slate-700 mb-1">Select Bank</label>
+              <select [(ngModel)]="newBudget.bankName" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl text-sm transition-all outline-none">
+                @for (bank of banks; track bank.id) {
+                  <option [value]="bank.name">{{ bank.name }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Monthly Limit (₹)</label>
+            <input type="number" step="10" [(ngModel)]="newBudget.limitAmount" placeholder="500.00" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl text-sm transition-all outline-none" />
+          </div>
+        </div>
+
+        <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+          <button (click)="isAddOpen = false" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors text-sm">Cancel</button>
+          <button (click)="saveBudget()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 transition-all text-sm">Save Budget</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

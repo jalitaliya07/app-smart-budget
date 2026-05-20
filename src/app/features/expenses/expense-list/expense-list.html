@@ -1,0 +1,123 @@
+<div class="space-y-6">
+  <!-- Top Bar -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-800">Expense Management</h2>
+      <p class="text-sm text-slate-500">Track, filter, and manage all your financial transactions.</p>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center gap-4 self-start md:self-auto">
+      <div class="px-4 py-2 bg-slate-50 border border-slate-150/60 rounded-xl flex flex-col justify-center text-left sm:text-right">
+        <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Total Monthly Expense</span>
+        <span class="text-lg font-extrabold text-rose-600">₹{{ totalMonthlyExpense | number:'1.2-2' }}</span>
+      </div>
+
+      <button (click)="openAddModal()" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-cyan-500 hover:from-indigo-700 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2 self-start sm:self-auto">
+        <span class="text-xl">+</span> Add Expense
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter & Search Bar -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+    <div class="relative">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="filterExpenses()"
+        placeholder="Search title or notes..." 
+        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-lg text-sm transition-all outline-none"
+      />
+    </div>
+
+    <div>
+      <select 
+        [(ngModel)]="selectedCategory" 
+        (ngModelChange)="filterExpenses()"
+        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-lg text-sm transition-all outline-none"
+      >
+        <option value="">All Categories</option>
+        @for (cat of categories; track cat.id) {
+          <option [value]="cat.name">{{ cat.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="flex items-center justify-end">
+      <span class="text-sm text-slate-500 font-medium">Showing {{ filteredExpenses.length }} of {{ expenses.length }} entries</span>
+    </div>
+  </div>
+
+  <!-- Expense Table -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50 text-slate-600 uppercase text-xs font-semibold border-b border-slate-100">
+            <th class="py-4 px-6">Transaction</th>
+            <th class="py-4 px-6">Category</th>
+            <th class="py-4 px-6">Payment Method</th>
+            <th class="py-4 px-6">Date</th>
+            <th class="py-4 px-6 text-right">Amount</th>
+            <th class="py-4 px-6 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-sm">
+          @for (exp of filteredExpenses; track exp.id) {
+            <tr class="hover:bg-slate-50/80 transition-colors group">
+              <td class="py-4 px-6">
+                <div>
+                  <p class="font-bold text-slate-800">{{ exp.title }}</p>
+                  <p class="text-xs text-slate-500">{{ exp.notes || 'No additional notes' }}</p>
+                </div>
+              </td>
+              <td class="py-4 px-6">
+                <span 
+                  class="px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm"
+                  [style.backgroundColor]="(exp.category?.color || '#6366f1') + '20'"
+                  [style.color]="exp.category?.color || '#6366f1'"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full" [style.backgroundColor]="exp.category?.color || '#6366f1'"></span>
+                  {{ exp.category?.name || 'General' }}
+                </span>
+              </td>
+              <td class="py-4 px-6 text-slate-600 font-medium">
+                {{ exp.paymentMethod }}
+              </td>
+              <td class="py-4 px-6 text-slate-500">
+                {{ exp.expenseDate | date:'mediumDate' }}
+              </td>
+              <td class="py-4 px-6 text-right font-extrabold text-slate-900">
+                ₹{{ exp.amount | number:'1.2-2' }}
+              </td>
+              <td class="py-4 px-6 text-center space-x-2">
+                <button (click)="openEditModal(exp)" class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                  Edit
+                </button>
+                <button (click)="deleteExpense(exp.id)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+          @if (filteredExpenses.length === 0) {
+            <tr>
+              <td colSpan="6" class="py-12 text-center text-slate-400">
+                No matching expenses found. Add one to get started!
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Component -->
+  @if (isModalOpen) {
+    <app-expense-form-modal 
+      [expense]="selectedExpense" 
+      [categories]="categories" 
+      (closeModal)="closeModal()" 
+      (saveExpense)="onSaveExpense($event)"
+    ></app-expense-form-modal>
+  }
+</div>

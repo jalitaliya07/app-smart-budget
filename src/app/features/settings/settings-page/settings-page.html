@@ -1,0 +1,139 @@
+<div class="space-y-6 max-w-4xl">
+  <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+    <h2 class="text-2xl font-bold text-slate-800 mb-1">Preferences & Settings</h2>
+    <p class="text-sm text-slate-500">Manage your profile credentials and app appearance.</p>
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+    <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-4">Profile Information</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Display Name</label>
+        <input type="text" formControlName="name" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl text-sm transition-all outline-none" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+        <input type="email" formControlName="email" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl text-sm transition-all outline-none" />
+      </div>
+    </div>
+    <div>
+      <button type="submit" [disabled]="isLoading" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+        <span *ngIf="!isLoading">Update Profile</span>
+        <span *ngIf="isLoading" class="flex items-center gap-2">
+          <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Updating...
+        </span>
+      </button>
+    </div>
+  </form>
+
+  <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+    <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-4">Appearance</h3>
+    <div class="flex items-center justify-between">
+      <div>
+        <h4 class="font-semibold text-slate-800 text-sm">Dark Mode</h4>
+        <p class="text-xs text-slate-500">Toggle dark appearance for low-light environments.</p>
+      </div>
+      <button (click)="toggleDark()" class="w-14 h-8 rounded-full transition-colors relative p-1 flex items-center" [class.bg-indigo-600]="darkMode" [class.bg-slate-300]="!darkMode">
+        <div class="w-6 h-6 rounded-full bg-white shadow-md transition-transform transform" [class.translate-x-6]="darkMode"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- DELEGATE ACCESS (PASSKEY) SECTION -->
+  <div class="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden">
+    <!-- Header gradient banner -->
+    <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">🔑</div>
+        <div>
+          <h3 class="text-white font-bold text-base">Delegate Access</h3>
+          <p class="text-amber-100 text-xs">Allow someone to view your account using a permanent passkey</p>
+        </div>
+      </div>
+      <span class="px-3 py-1 bg-white/20 text-white text-xs font-bold rounded-full border border-white/30">SECURE</span>
+    </div>
+
+    <div class="p-6 space-y-5">
+      <!-- Explainer -->
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 leading-relaxed">
+        <p class="font-bold mb-2">How Delegate Access works:</p>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="flex items-start gap-2">
+            <span class="text-amber-500 font-black mt-0.5">1.</span>
+            <span>Click <strong>Generate Passkey</strong> below to create a unique 8-character code.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-amber-500 font-black mt-0.5">2.</span>
+            <span>Share this passkey with the person (via WhatsApp, Email, etc.).</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-amber-500 font-black mt-0.5">3.</span>
+            <span>They enter it on the <strong>Login page → Access via Passkey</strong>.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-amber-500 font-black mt-0.5">4.</span>
+            <span>You receive an <strong>email notification</strong> with their name & access time.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Passkey Display -->
+      <div *ngIf="delegatePasskey" class="space-y-3">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Your Active Passkey</p>
+        <div class="flex items-center gap-3">
+          <!-- Passkey box -->
+          <div class="flex-1 bg-slate-900 rounded-xl px-5 py-4 text-center">
+            <span class="text-2xl font-mono font-black tracking-[0.3em] text-amber-400">{{ delegatePasskey }}</span>
+          </div>
+          <!-- Copy button -->
+          <button
+            (click)="copyPasskey()"
+            class="px-4 py-4 rounded-xl font-bold text-sm transition-all flex flex-col items-center gap-1 min-w-[72px]"
+            [ngClass]="passkeyJustCopied ? 'bg-emerald-100 text-emerald-700 border border-emerald-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'"
+          >
+            <span class="text-lg">{{ passkeyJustCopied ? '✅' : '📋' }}</span>
+            <span class="text-[10px] font-bold">{{ passkeyJustCopied ? 'Copied!' : 'Copy' }}</span>
+          </button>
+        </div>
+        <!-- Regenerate Button -->
+        <button
+          (click)="regeneratePasskey()"
+          [disabled]="isRegeneratingPasskey"
+          class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-xs shadow-md transition-all flex justify-center items-center gap-2"
+        >
+          <span *ngIf="isRegeneratingPasskey" class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <span *ngIf="!isRegeneratingPasskey">🔄</span>
+          {{ isRegeneratingPasskey ? 'Regenerating...' : 'Regenerate Pass Key' }}
+        </button>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!delegatePasskey" class="text-center py-4 text-slate-400 text-sm">
+        <p class="text-2xl mb-2">🔐</p>
+        <p>No active passkey. Generate one to share account access.</p>
+      </div>
+
+      <!-- Generate Button -->
+      <button
+        *ngIf="!delegatePasskey"
+        (click)="generatePasskey()"
+        [disabled]="isGeneratingPasskey"
+        class="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 disabled:opacity-60 text-white font-bold rounded-xl shadow-lg shadow-amber-500/30 transition-all flex justify-center items-center gap-2"
+      >
+        <span *ngIf="isGeneratingPasskey" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+        <span *ngIf="!isGeneratingPasskey">🔑</span>
+        {{ isGeneratingPasskey ? 'Generating...' : 'Generate Delegate Passkey' }}
+      </button>
+
+      <p *ngIf="!delegatePasskey" class="text-center text-[11px] text-slate-400">
+        ⚠️ You can only generate one permanent passkey. Once generated, it cannot be recreated.
+      </p>
+    </div>
+  </div>
+
+</div>
+
