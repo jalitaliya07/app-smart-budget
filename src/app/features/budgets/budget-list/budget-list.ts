@@ -58,7 +58,9 @@ export class BudgetList implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
         this.categories = data || [];
-        if (this.categories.length > 0) {
+        if (this.bankAndCashCategories.length > 0) {
+          this.newBudget.categoryId = this.bankAndCashCategories[0].id;
+        } else if (this.categories.length > 0) {
           this.newBudget.categoryId = this.categories[0].id;
         }
       },
@@ -112,7 +114,7 @@ export class BudgetList implements OnInit {
   openAddModal() {
     this.editingBudgetId = null;
     this.newBudget = { 
-      categoryId: this.categories[0]?.id || '', 
+      categoryId: this.bankAndCashCategories[0]?.id || '', 
       limitAmount: '', 
       bankName: this.banks[0]?.name || '' 
     };
