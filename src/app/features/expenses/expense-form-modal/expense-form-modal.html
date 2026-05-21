@@ -92,7 +92,12 @@
                   <option [value]="bank.name">{{ bank.name }}</option>
                 }
               </select>
-              @if (expenseForm.get('bankName')?.invalid && expenseForm.get('bankName')?.touched) {
+              @if (banks.length === 0) {
+                <p class="text-xs text-amber-500 font-semibold mt-1.5 animate-slide-down flex items-start gap-1">
+                  <span>⚠️</span>
+                  <span>No bank accounts registered. Please add a bank in Bank settings, or change Payment Method to Cash.</span>
+                </p>
+              } @else if (expenseForm.get('bankName')?.invalid && expenseForm.get('bankName')?.touched) {
                 <p class="text-xs text-rose-500 font-semibold mt-1 animate-slide-down">Please select a bank account.</p>
               }
             </div>

@@ -58,9 +58,8 @@ export class BudgetList implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (data) => {
         this.categories = data || [];
-        const filtered = this.bankAndCashCategories;
-        if (filtered.length > 0) {
-          this.newBudget.categoryId = filtered[0].id;
+        if (this.categories.length > 0) {
+          this.newBudget.categoryId = this.categories[0].id;
         }
       },
       error: () => {
@@ -113,7 +112,7 @@ export class BudgetList implements OnInit {
   openAddModal() {
     this.editingBudgetId = null;
     this.newBudget = { 
-      categoryId: this.bankAndCashCategories[0]?.id || '', 
+      categoryId: this.categories[0]?.id || '', 
       limitAmount: '', 
       bankName: this.banks[0]?.name || '' 
     };
