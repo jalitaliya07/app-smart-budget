@@ -14,45 +14,7 @@ body {
                 color 0.3s ease-out;
 }
 
-/* Redefine Tailwind v4 slate color tokens under dark mode class */
-.dark {
-    --color-white: #1e293b;        /* bg-white cards/panels become slate-800 */
-    --color-slate-50: #0f172a;     /* Main container background becomes slate-900 */
-    --color-slate-100: #334155;    /* Subtle borders (slate-100) become slate-700 */
-    --color-slate-200: #475569;    /* Strong borders (slate-200) become slate-600 */
-    --color-slate-300: #64748b;    /* Icons/sliders (slate-300) become slate-500 */
-    --color-slate-400: #94a3b8;    /* Muted colors/disabled (slate-400) become slate-400 */
-    --color-slate-500: #cbd5e1;    /* Caption/secondary text (slate-500) becomes slate-300 */
-    --color-slate-600: #e2e8f0;    /* Secondary headings (slate-600) become slate-200 */
-    --color-slate-700: #f1f5f9;    /* Body text (slate-700) becomes slate-100 */
-    --color-slate-800: #f8fafc;    /* Main title headings (slate-800) become slate-50 */
-}
 
-/* Custom dark mode adjustments for interactive components to look extremely premium */
-.dark input::placeholder, 
-.dark textarea::placeholder {
-    color: #64748b;
-}
-
-.dark input, 
-.dark select, 
-.dark textarea {
-    background-color: #1e293b !important;
-    border-color: #334155 !important;
-    color: #f8fafc !important;
-}
-
-.dark input:focus, 
-.dark select:focus, 
-.dark textarea:focus {
-    background-color: #0f172a !important;
-    border-color: var(--color-indigo-500) !important;
-}
-
-.dark select option {
-    background-color: #1e293b;
-    color: #f8fafc;
-}
 
 /* Global Print Styles */
 @media print {
