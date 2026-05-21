@@ -1,181 +1,225 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-50 relative overflow-hidden">
-  <!-- Decorative blobs -->
-  <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/20 blur-3xl pointer-events-none"></div>
-  <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/20 blur-3xl pointer-events-none"></div>
-  <div class="absolute top-[40%] left-[60%] w-[25%] h-[25%] rounded-full bg-cyan-500/10 blur-3xl pointer-events-none"></div>
+<div class="min-h-screen flex bg-[#080810] overflow-hidden relative">
 
-  <div class="relative w-full max-w-md p-8 bg-white/80 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl transition-all duration-500">
+  <!-- Animated Background Orbs -->
+  <div class="orb orb-primary w-[600px] h-[600px] top-[-20%] left-[-10%] opacity-60"></div>
+  <div class="orb orb-blue w-[400px] h-[400px] bottom-[-10%] right-[40%] opacity-40" style="animation-delay: -3s"></div>
+  <div class="orb orb-purple w-[300px] h-[300px] top-[40%] right-[30%] opacity-30" style="animation-delay: -5s"></div>
 
-    <!-- ========================= STANDARD LOGIN MODE ========================= -->
-    <ng-container *ngIf="!showPasskeyMode">
-      <div class="text-center mb-8">
-        <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black text-xl mx-auto mb-3 shadow-lg shadow-indigo-500/30">S</div>
-        <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">SmartBudget <span class="text-indigo-600">Pro</span></h1>
-        <p class="text-slate-500 mt-1 text-sm">Welcome back! Sign in to continue.</p>
-      </div>
-
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
-        <div *ngIf="error" class="p-3 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100 flex items-center gap-2">
-          <span>⚠️</span> {{ error }}
-        </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
-          <input
-            type="email"
-            formControlName="email"
-            class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none text-slate-800 placeholder-slate-400"
-            placeholder="you@example.com"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
-          <input
-            type="password"
-            formControlName="password"
-            class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none text-slate-800"
-            placeholder="••••••••"
-          />
-        </div>
-
-        <div class="flex items-center justify-between text-sm">
-          <label class="flex items-center gap-2 cursor-pointer select-none">
-            <input type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 w-4 h-4" />
-            <span class="text-slate-600 font-medium">Remember me</span>
-          </label>
-          <a href="#" class="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors">Forgot Password?</a>
-        </div>
-
-        <button
-          type="submit"
-          [disabled]="isLoading"
-          class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex justify-center items-center gap-2"
-        >
-          <span *ngIf="isLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-          {{ isLoading ? 'Signing in...' : 'Sign In →' }}
-        </button>
-      </form>
-    </ng-container>
-
-    <!-- ========================= DELEGATE ACCESS / PASSKEY MODE ========================= -->
-    <ng-container *ngIf="showPasskeyMode">
-      <div class="text-center mb-7">
-        <!-- Animated icon -->
-        <div class="w-16 h-16 mx-auto mb-4 relative">
-          <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-md animate-pulse"></div>
-          <div class="relative w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 border-2 border-amber-300 rounded-2xl flex items-center justify-center shadow-lg">
-            <span class="text-3xl">🔑</span>
-          </div>
-        </div>
-        <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Delegate Access</h1>
-        <p class="text-slate-500 mt-1.5 text-sm leading-relaxed max-w-xs mx-auto">
-          Enter a passkey shared by another user to access their SmartBudget account. They will be notified by email.
-        </p>
-      </div>
-
-      <!-- How it works hint -->
-      <div class="mb-5 bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-800 leading-relaxed">
-        <p class="font-bold mb-1 flex items-center gap-1">💡 How it works</p>
-        <ol class="space-y-0.5 list-decimal list-inside text-amber-700">
-          <li>Account owner generates a passkey from <strong>Settings → Delegate Access</strong></li>
-          <li>They share the passkey with you</li>
-          <li>You enter it here to access their account</li>
-          <li>The owner instantly receives an email notification</li>
-        </ol>
-      </div>
-
-      <!-- Success State -->
-      <div *ngIf="linkSuccess" class="p-5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-center space-y-2 mb-4">
-        <div class="text-3xl">✅</div>
-        <p class="font-bold text-base">Access Granted!</p>
-        <p class="text-sm text-emerald-700">{{ linkSuccessMessage }}</p>
-        <p class="text-xs text-emerald-600 flex items-center justify-center gap-1">
-          <span class="w-3 h-3 border-2 border-emerald-400/30 border-t-emerald-500 rounded-full animate-spin inline-block"></span>
-          Redirecting to dashboard...
-        </p>
-      </div>
-
-      <!-- Passkey Form -->
-      <form *ngIf="!linkSuccess" (submit)="connectWithPasskey($event)" class="space-y-4">
-        <div *ngIf="error" class="p-3 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100 flex items-center gap-2">
-          <span>⚠️</span> {{ error }}
-        </div>
-
-        <!-- Your Name -->
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Your Name <span class="text-red-500">*</span></label>
-          <input
-            type="text"
-            [(ngModel)]="guestName"
-            name="guestName"
-            placeholder="e.g. Jal Italiya"
-            class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all outline-none text-slate-800 placeholder-slate-400 font-medium"
-          />
-          <p class="text-[11px] text-slate-400 mt-1">The account owner will see this name in the email notification.</p>
-        </div>
-
-        <!-- Your Email -->
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Your Email <span class="text-red-500">*</span></label>
-          <input
-            type="email"
-            [(ngModel)]="guestEmail"
-            name="guestEmail"
-            placeholder="your@email.com"
-            class="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all outline-none text-slate-800 placeholder-slate-400"
-          />
-        </div>
-
-        <!-- Passkey Input -->
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5 text-center uppercase tracking-widest">Enter Passkey</label>
-          <input
-            type="text"
-            [(ngModel)]="passkey"
-            name="passkey"
-            autocomplete="off"
-            class="w-full px-4 py-4 rounded-xl bg-slate-900 border border-slate-700 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all outline-none text-center text-2xl font-mono tracking-[0.3em] font-bold text-amber-400 placeholder-slate-600 uppercase"
-            placeholder="XXXXXXXX"
-            maxlength="8"
-          />
-          <p class="text-[11px] text-slate-400 mt-1.5 text-center">8-character passkey — case insensitive</p>
-        </div>
-
-        <button
-          type="submit"
-          [disabled]="isLinking"
-          class="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 disabled:opacity-60 text-white font-bold rounded-xl shadow-lg shadow-amber-500/30 transition-all flex justify-center items-center gap-2"
-        >
-          <span *ngIf="isLinking" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-          <span *ngIf="!isLinking">🔓</span>
-          {{ isLinking ? 'Verifying passkey...' : 'Access Account' }}
-        </button>
-      </form>
-    </ng-container>
-
-    <!-- ========================= FOOTER ACTIONS ========================= -->
-    <div class="mt-6 pt-5 border-t border-slate-100 space-y-3">
-
-      <!-- Toggle Button -->
-      <button
-        (click)="togglePasskeyMode()"
-        class="w-full py-2.5 px-4 border font-semibold rounded-xl transition-all flex justify-center items-center gap-2 text-sm"
-        [ngClass]="showPasskeyMode
-          ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'
-          : 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700'"
-      >
-        <span *ngIf="!showPasskeyMode">🔑 Access another account via Passkey</span>
-        <span *ngIf="showPasskeyMode">← Back to Email & Password Login</span>
-      </button>
-
-      <!-- Sign Up Link -->
-      <p class="text-center text-sm text-slate-500">
-        Don't have an account?
-        <a routerLink="/register" class="text-indigo-600 hover:text-indigo-700 font-bold transition-colors ml-1">Create Account</a>
-      </p>
+  <!-- ============================== LEFT PANEL ============================== -->
+  <div class="hidden lg:flex lg:w-1/2 flex-col justify-between p-14 relative z-10">
+    <!-- Brand -->
+    <div class="flex items-center gap-3 animate-fade-up">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg shadow-lg" style="background: linear-gradient(135deg, #10b981, #14b8a6);">S</div>
+      <span class="text-xl font-bold text-white tracking-tight">SmartBudget <span class="gradient-text">Pro</span></span>
     </div>
 
-  </div>
-</div>
+    <!-- Hero Content -->
+    <div class="space-y-8 animate-fade-up delay-100">
+      <div class="space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); color: #10b981;">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          AI-Powered Finance
+        </div>
+        <h1 class="text-5xl font-black leading-tight text-white">
+          Take Full Control of<br>
+          <span class="gradient-text">Your Finances</span>
+        </h1>
+        <p class="text-slate-400 text-lg leading-relaxed max-w-md">
+          Track every rupee, budget smarter, and grow your wealth — all in one premium dashboard.
+        </p>
+      </div>
 
+      <!-- Floating Stats Cards -->
+      <div class="grid grid-cols-2 gap-4 max-w-sm">
+        <div class="glass-card p-4 animate-scale-in delay-200">
+          <p class="text-xs font-bold uppercase tracking-wider" style="color: #10b981;">Savings Rate</p>
+          <p class="text-2xl font-black text-white mt-1">34.2%</p>
+          <p class="text-xs text-slate-500 mt-0.5">↑ 5% this month</p>
+        </div>
+        <div class="glass-card p-4 animate-scale-in delay-300">
+          <p class="text-xs font-bold uppercase tracking-wider text-blue-400">Monthly Budget</p>
+          <p class="text-2xl font-black text-white mt-1">₹42,500</p>
+          <p class="text-xs text-slate-500 mt-0.5">68% allocated</p>
+        </div>
+        <div class="glass-card p-4 animate-scale-in delay-400 col-span-2">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Budget Health</p>
+            <span class="text-xs font-bold" style="color: #10b981;">On Track</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width: 68%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quote -->
+      <blockquote class="border-l-2 pl-4 animate-fade-up delay-500" style="border-color: #10b981;">
+        <p class="text-slate-400 italic text-sm">"Financial freedom is available to those who learn about it and work for it."</p>
+        <cite class="text-xs font-bold mt-1 block" style="color: #10b981;">— Robert Kiyosaki</cite>
+      </blockquote>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-xs text-slate-600 animate-fade-up delay-500">© 2025 SmartBudget Pro. All rights reserved.</p>
+  </div>
+
+  <!-- ============================== RIGHT PANEL ============================== -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10">
+    <div class="w-full max-w-md animate-scale-in">
+
+      <!-- Mobile Brand (hidden on lg) -->
+      <div class="flex items-center justify-center gap-3 mb-8 lg:hidden">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg" style="background: linear-gradient(135deg, #10b981, #14b8a6);">S</div>
+        <span class="text-xl font-bold text-white">SmartBudget <span class="gradient-text">Pro</span></span>
+      </div>
+
+      <!-- Glass Login Card -->
+      <div class="glass-card p-8">
+
+        <!-- ========================= STANDARD LOGIN ========================= -->
+        <ng-container *ngIf="!showPasskeyMode">
+          <div class="mb-8">
+            <h2 class="text-2xl font-black text-white">Welcome back</h2>
+            <p class="text-slate-400 text-sm mt-1">Sign in to your account to continue.</p>
+          </div>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+            <!-- Error -->
+            <div *ngIf="error" class="p-3 rounded-xl text-sm flex items-center gap-2.5 animate-scale-in" style="background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.2); color: #f43f5e;">
+              <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              {{ error }}
+            </div>
+
+            <!-- Email -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-slate-300">Email Address</label>
+              <div class="relative">
+                <input type="email" formControlName="email" placeholder="you@example.com"
+                  class="input-dark pl-11 w-full" />
+                <svg class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-slate-300">Password</label>
+              <div class="relative">
+                <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••"
+                  class="input-dark pl-11 pr-11 w-full" />
+                <svg class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <button type="button" (click)="showPassword = !showPassword"
+                  class="absolute right-3.5 top-3.5 text-slate-500 hover:text-slate-300 transition-colors">
+                  <svg *ngIf="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                  <svg *ngIf="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember / Forgot -->
+            <div class="flex items-center justify-between text-sm">
+              <label class="flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" class="w-4 h-4 rounded accent-emerald-500 cursor-pointer" />
+                <span class="text-slate-400 font-medium">Remember me</span>
+              </label>
+              <a href="#" class="font-semibold transition-colors hover:underline" style="color: #10b981;">Forgot Password?</a>
+            </div>
+
+            <!-- Sign In Button -->
+            <button type="submit" [disabled]="isLoading" class="btn-primary w-full py-3.5 flex items-center justify-center gap-2.5 relative z-10">
+              <span *ngIf="isLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              <svg *ngIf="!isLoading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+              </svg>
+              {{ isLoading ? 'Signing in...' : 'Sign In' }}
+            </button>
+          </form>
+        </ng-container>
+
+        <!-- ========================= PASSKEY MODE ========================= -->
+        <ng-container *ngIf="showPasskeyMode">
+          <div class="mb-7">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 animate-pulse-glow" style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);">
+              <svg class="w-7 h-7" style="color: #f59e0b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-black text-white">Delegate Access</h2>
+            <p class="text-slate-400 text-sm mt-1 leading-relaxed">Enter a passkey shared by another user to access their account.</p>
+          </div>
+
+          <!-- Hint -->
+          <div class="mb-5 p-3.5 rounded-xl text-xs leading-relaxed" style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.15); color: #fbbf24;">
+            <p class="font-bold mb-1">💡 How it works</p>
+            <ol class="space-y-0.5 list-decimal list-inside text-amber-300/80">
+              <li>Account owner generates a passkey from <strong>Settings → Delegate Access</strong></li>
+              <li>They share the passkey with you</li>
+              <li>You enter it here to access their account</li>
+            </ol>
+          </div>
+
+          <!-- Success -->
+          <div *ngIf="linkSuccess" class="p-5 rounded-2xl text-center space-y-2 mb-4 animate-scale-in" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">
+            <div class="text-3xl">✅</div>
+            <p class="font-bold text-white text-base">Access Granted!</p>
+            <p class="text-sm" style="color: #10b981;">{{ linkSuccessMessage }}</p>
+          </div>
+
+          <form *ngIf="!linkSuccess" (submit)="connectWithPasskey($event)" class="space-y-4">
+            <div *ngIf="error" class="p-3 rounded-xl text-sm flex items-center gap-2" style="background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.2); color: #f43f5e;">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              {{ error }}
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-slate-300">Your Name <span style="color: #f43f5e;">*</span></label>
+              <input type="text" [(ngModel)]="guestName" name="guestName" placeholder="e.g. Jal Italiya" class="input-dark w-full" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-slate-300">Your Email <span style="color: #f43f5e;">*</span></label>
+              <input type="email" [(ngModel)]="guestEmail" name="guestEmail" placeholder="your@email.com" class="input-dark w-full" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-slate-300 text-center uppercase tracking-widest">Passkey</label>
+              <input type="text" [(ngModel)]="passkey" name="passkey" autocomplete="off" maxlength="8" placeholder="XXXXXXXX"
+                class="w-full px-4 py-4 rounded-xl text-center text-2xl font-mono tracking-[0.3em] font-bold uppercase outline-none transition-all"
+                style="background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); color: #fbbf24;"
+                (focus)="$event.target.style.borderColor='#f59e0b'; $event.target.style.boxShadow='0 0 0 3px rgba(245,158,11,0.15)'"
+                (blur)="$event.target.style.borderColor='rgba(245,158,11,0.2)'; $event.target.style.boxShadow='none'"
+              />
+            </div>
+            <button type="submit" [disabled]="isLinking"
+              class="w-full py-3.5 px-4 font-bold rounded-xl transition-all flex justify-center items-center gap-2"
+              style="background: linear-gradient(135deg, #f59e0b, #f97316); color: white; box-shadow: 0 4px 20px rgba(245,158,11,0.3);">
+              <span *ngIf="isLinking" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              {{ isLinking ? 'Verifying...' : '🔓 Access Account' }}
+            </button>
+          </form>
+        </ng-container>
+
+        <!-- Footer Actions -->
+        <div class="mt-6 pt-5 space-y-3" style="border-top: 1px solid rgba(255,255,255,0.07);">
+          <button (click)="togglePasskeyMode()"
+            class="w-full py-2.5 px-4 font-semibold rounded-xl transition-all flex justify-center items-center gap-2 text-sm"
+            [ngClass]="showPasskeyMode ? 'text-slate-400 hover:text-slate-200' : 'text-amber-400 hover:text-amber-300'"
+            style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);">
+            <span *ngIf="!showPasskeyMode">🔑 Access another account via Passkey</span>
+            <span *ngIf="showPasskeyMode">← Back to Email & Password Login</span>
+          </button>
+          <p class="text-center text-sm text-slate-500">
+            Don't have an account?
+            <a routerLink="/register" class="font-bold transition-colors ml-1 hover:underline" style="color: #10b981;">Create Account</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

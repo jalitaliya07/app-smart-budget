@@ -1,52 +1,72 @@
-<div class="min-h-screen flex items-center justify-center bg-slate-50 relative overflow-hidden">
-  <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-cyan-500/20 blur-3xl"></div>
-  <div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/20 blur-3xl"></div>
+<div class="min-h-screen flex items-center justify-center bg-[#080810] relative overflow-hidden p-6">
 
-  <div class="relative w-full max-w-md p-8 bg-white/70 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl">
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Create an Account</h1>
-      <p class="text-slate-500 mt-2">Join SmartBudget Pro today.</p>
+  <!-- Animated Background Orbs -->
+  <div class="orb orb-primary w-[500px] h-[500px] top-[-15%] right-[-5%] opacity-50"></div>
+  <div class="orb orb-blue w-[400px] h-[400px] bottom-[-15%] left-[-5%] opacity-40" style="animation-delay: -4s"></div>
+
+  <!-- Glass Card -->
+  <div class="w-full max-w-md animate-scale-in">
+
+    <!-- Brand -->
+    <div class="flex items-center justify-center gap-3 mb-8">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg shadow-lg" style="background: linear-gradient(135deg, #10b981, #14b8a6);">S</div>
+      <span class="text-xl font-bold text-white tracking-tight">SmartBudget <span class="gradient-text">Pro</span></span>
     </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
-      <div *ngIf="error" class="p-3 bg-red-100 text-red-600 rounded-lg text-sm">
-        {{ error }}
+    <div class="glass-card p-8">
+      <div class="mb-8">
+        <h1 class="text-2xl font-black text-white">Create your account</h1>
+        <p class="text-slate-400 text-sm mt-1">Join thousands of users managing their finances smarter.</p>
       </div>
 
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <!-- Error -->
+        <div *ngIf="error" class="p-3 rounded-xl text-sm flex items-center gap-2.5 animate-scale-in" style="background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.2); color: #f43f5e;">
+          <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          {{ error }}
+        </div>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
-        <input 
-          type="email" 
-          formControlName="email"
-          class="w-full px-4 py-3 rounded-xl bg-white/50 border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none"
-          placeholder="you@example.com"
-        />
+        <!-- Email -->
+        <div class="space-y-1.5">
+          <label class="block text-sm font-semibold text-slate-300">Email Address</label>
+          <div class="relative">
+            <input type="email" formControlName="email" placeholder="you@example.com"
+              class="input-dark pl-11 w-full" />
+            <svg class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-1.5">
+          <label class="block text-sm font-semibold text-slate-300">Password</label>
+          <div class="relative">
+            <input type="password" formControlName="password" placeholder="Min. 6 characters"
+              class="input-dark pl-11 w-full" />
+            <svg class="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Create Account Button -->
+        <button type="submit" [disabled]="isLoading" class="btn-primary w-full py-3.5 flex items-center justify-center gap-2.5 relative z-10">
+          <span *ngIf="isLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <svg *ngIf="!isLoading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+          </svg>
+          {{ isLoading ? 'Creating account...' : 'Create Account' }}
+        </button>
+      </form>
+
+      <!-- Footer -->
+      <div class="mt-6 pt-5 text-center" style="border-top: 1px solid rgba(255,255,255,0.07);">
+        <p class="text-sm text-slate-500">
+          Already have an account?
+          <a routerLink="/login" class="font-bold transition-colors ml-1 hover:underline" style="color: #10b981;">Sign in</a>
+        </p>
       </div>
-
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-2">Password</label>
-        <input 
-          type="password" 
-          formControlName="password"
-          class="w-full px-4 py-3 rounded-xl bg-white/50 border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none"
-          placeholder="••••••••"
-        />
-      </div>
-
-      <button 
-        type="submit" 
-        [disabled]="isLoading"
-        class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex justify-center items-center gap-2"
-      >
-        <span *ngIf="isLoading" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-        {{ isLoading ? 'Creating account...' : 'Sign up' }}
-      </button>
-    </form>
-
-    <p class="mt-8 text-center text-sm text-slate-600">
-      Already have an account? 
-      <a routerLink="/login" class="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors">Sign in</a>
-    </p>
+    </div>
   </div>
 </div>

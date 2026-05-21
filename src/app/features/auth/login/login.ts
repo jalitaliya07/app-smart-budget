@@ -22,6 +22,7 @@ export class Login {
 
   error: string = '';
   isLoading: boolean = false;
+  showPassword: boolean = false;
 
   // Passkey delegate access state
   showPasskeyMode: boolean = false;

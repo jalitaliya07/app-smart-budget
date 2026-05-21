@@ -1,177 +1,105 @@
-/* Sidebar container styles */
+/* ── Sidebar Container ── */
 .sidebar-container {
   width: 240px;
-  height: 100vh;
+  background: rgba(10, 10, 20, 0.95);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
   flex-shrink: 0;
   z-index: 40;
 }
 
-/* Nav scrolling when list overflows */
-.sidebar-container nav {
-  max-height: calc(100vh - 180px);
+/* ── Nav Item ── */
+.nav-item {
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #f1f5f9 !important;
 }
 
-/* Menu Button Styles */
-.menu-button {
-  padding: 10px 16px;
-  color: #cbd5e1; /* slate-300 */
-  border-left: 4px solid transparent;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
+/* ── Active State — Neon Emerald Glow ── */
+.nav-active {
+  background: rgba(16, 185, 129, 0.08) !important;
+  border-left-color: #10b981 !important;
+  color: #10b981 !important;
 }
+.nav-active svg { stroke: #10b981 !important; }
 
-.menu-button:hover {
-  background-color: #1e293b; /* slate-800 */
-  color: #ffffff;
-}
+/* ── Sidebar Scrollbar ── */
+nav::-webkit-scrollbar { width: 3px; }
+nav::-webkit-scrollbar-track { background: transparent; }
+nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
 
-/* Active menu item highlight background */
-.active-menu-item {
-  background-color: rgba(99, 102, 241, 0.15) !important; /* indigo-500/15 */
-  color: #818cf8 !important; /* indigo-400 */
-  border-left: 4px solid #6366f1 !important; /* indigo-500 */
-}
-
-/* Scrollbar styling for sidebar */
-.scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
-}
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
-}
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
-}
-
-/* Tablet Layout (769px - 1024px) */
+/* ── Tablet (769px - 1024px) ── */
 @media (max-width: 1024px) and (min-width: 769px) {
-  .sidebar-container {
-    width: 180px;
-  }
-  
-  .sidebar-brand-text {
-    font-size: 16px;
-  }
-  
-  .sidebar-brand-text span {
-    display: none;
-  }
-
-  .menu-button {
-    padding: 8px 12px;
-    gap: 8px;
-    font-size: 13px;
-  }
-  
-  .menu-icon {
-    font-size: 16px;
-  }
-  
-  .pro-banner {
-    padding: 12px;
-  }
-  
-  .pro-banner p {
-    font-size: 11px;
-  }
-  
-  .pro-banner button {
-    padding: 4px;
-    font-size: 12px;
-  }
-}
-
-/* Mobile Layout (768px and below) */
-@media (max-width: 768px) {
-  .sidebar-container {
-    width: 70px;
-  }
-
-  /* Hide textual elements when collapsed on mobile */
+  .sidebar-container { width: 72px; }
   .sidebar-brand-text,
   .menu-label,
-  .sidebar-footer {
-    display: none !important;
+  .sidebar-section-label,
+  .sidebar-footer { display: none !important; }
+  .sidebar-header { padding: 16px 0; justify-content: center; }
+  .nav-item { padding: 10px 0; justify-content: center; border-left: none; border-radius: 12px; }
+  .sidebar-logo { margin: 0 auto; }
+  nav { padding: 8px; }
+}
+
+/* ── Mobile (768px and below) ── */
+@media (max-width: 768px) {
+  .sidebar-container {
+    width: 64px;
   }
+  .sidebar-brand-text,
+  .menu-label,
+  .sidebar-section-label,
+  .sidebar-footer { display: none !important; }
 
   .sidebar-header {
-    padding: 16px 0;
-    display: flex;
+    padding: 14px 0;
     justify-content: center;
   }
+  .sidebar-logo { margin: 0 auto; }
 
-  .sidebar-container nav {
-    padding: 0 8px;
-    margin-top: 16px;
-  }
-
-  .menu-button {
+  nav { padding: 8px; }
+  .nav-item {
     padding: 10px 0;
     justify-content: center;
     border-left: none;
-    border-bottom: 3px solid transparent;
-    border-radius: 8px;
-    gap: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 10px;
   }
-
-  .active-menu-item {
+  .nav-active {
     border-left: none !important;
-    border-bottom: 3px solid #6366f1 !important;
+    border-bottom-color: #10b981 !important;
   }
 
-  .menu-icon {
-    font-size: 18px;
-    margin: 0;
-  }
-
-  /* Mobile expanded overlay mode */
+  /* ── Mobile expanded drawer ── */
   .sidebar-container.mobile-expanded {
     position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    height: 100vh;
+    left: 0; top: 0; bottom: 0;
     width: 240px !important;
+    height: 100vh;
     z-index: 50;
   }
-
   .sidebar-container.mobile-expanded .sidebar-brand-text,
   .sidebar-container.mobile-expanded .menu-label,
-  .sidebar-container.mobile-expanded .sidebar-footer {
-    display: block !important;
-  }
-
+  .sidebar-container.mobile-expanded .sidebar-section-label,
+  .sidebar-container.mobile-expanded .sidebar-footer { display: block !important; }
   .sidebar-container.mobile-expanded .sidebar-header {
-    padding: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 20px; justify-content: space-between;
   }
-
-  .sidebar-container.mobile-expanded .mobile-close-btn {
-    display: block !important;
+  .sidebar-container.mobile-expanded .mobile-close-btn { display: block !important; }
+  .sidebar-container.mobile-expanded nav { padding: 8px 12px; }
+  .sidebar-container.mobile-expanded .nav-item {
+    padding: 10px 12px; justify-content: flex-start;
+    border-left-width: 2px; border-bottom: none; border-radius: 12px;
   }
-
-  .sidebar-container.mobile-expanded nav {
-    padding: 0 16px;
-  }
-
-  .sidebar-container.mobile-expanded .menu-button {
-    padding: 10px 16px;
-    justify-content: flex-start;
-    border-bottom: none;
-    border-left: 4px solid transparent;
-    gap: 12px;
-  }
-
-  .sidebar-container.mobile-expanded .active-menu-item {
+  .sidebar-container.mobile-expanded .nav-active {
+    border-left-color: #10b981 !important;
     border-bottom: none !important;
-    border-left: 4px solid #6366f1 !important;
   }
 }
