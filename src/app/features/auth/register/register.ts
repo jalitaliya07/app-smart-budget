@@ -16,7 +16,6 @@ export class Register {
   private router = inject(Router);
 
   registerForm: FormGroup = this.fb.group({
-    name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
@@ -28,7 +27,9 @@ export class Register {
     if (this.registerForm.invalid) return;
 
     this.isLoading = true;
-    this.authService.register(this.registerForm.value).subscribe({
+    const { email, password } = this.registerForm.value;
+    const name = email ? email.split('@')[0] : 'User';
+    this.authService.register({ name, email, password }).subscribe({
       next: () => {
         this.router.navigate(['/dashboard']);
       },
