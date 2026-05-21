@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @source "./app";
 
+/* Enable manual dark mode via class */
+@custom-variant dark (&:where(.dark, .dark *));
+
 body {
     background-color: var(--color-slate-50);
     color: var(--color-slate-800);
