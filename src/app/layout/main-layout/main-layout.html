@@ -1,11 +1,8 @@
-<div class="flex h-screen overflow-hidden" style="background: #080810; font-family: 'Inter', system-ui, sans-serif;">
+<div class="flex h-screen overflow-hidden" style="background: #f8fafc; font-family: 'Inter', system-ui, sans-serif;">
   <app-sidebar></app-sidebar>
   <div class="flex-1 flex flex-col relative overflow-y-auto">
-    <!-- Subtle background orbs -->
-    <div class="fixed top-0 right-0 w-[600px] h-[600px] pointer-events-none" style="background: radial-gradient(circle at top right, rgba(16,185,129,0.03), transparent 70%); z-index: 0;"></div>
-    <div class="fixed bottom-0 left-[240px] w-[400px] h-[400px] pointer-events-none" style="background: radial-gradient(circle at bottom left, rgba(59,130,246,0.03), transparent 70%); z-index: 0;"></div>
     <app-navbar></app-navbar>
-    <main class="flex-1 p-6 relative z-10 overflow-hidden">
+    <main class="flex-1 p-6 relative z-10">
       <router-outlet></router-outlet>
     </main>
     <app-toast></app-toast>
